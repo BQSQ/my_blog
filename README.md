@@ -1,5 +1,7 @@
-# 非常感谢 Hexo 和 nexT
+非常感谢 Hexo 和 nexT,master是源文件，可以自己下载deploy，gh-pages分支是deploy后的文件，可以直接使用   
+---
 
+# Hexo
 [![Build Status](https://travis-ci.org/hexojs/hexo.svg?branch=master)](https://travis-ci.org/hexojs/hexo)  [![NPM version](https://badge.fury.io/js/hexo.svg)](http://badge.fury.io/js/hexo) [![Coverage Status](https://coveralls.io/repos/hexojs/hexo/badge.svg?branch=master)](https://coveralls.io/r/hexojs/hexo?branch=master) [![Build status](https://ci.appveyor.com/api/projects/status/hpx3lduqjj2t6uqq/branch/master?svg=true)](https://ci.appveyor.com/project/tommy351/hexo/branch/master) [![Gitter](https://badges.gitter.im/hexojs/hexo.svg)](https://gitter.im/hexojs/hexo?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 A fast, simple & powerful blog framework, powered by [Node.js](http://nodejs.org).
