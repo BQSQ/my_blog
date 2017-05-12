@@ -70,4 +70,4 @@ theme: hexo-theme-next-5.1.1
 deploy:
   type: git
   repo: https://github.com/BQSQ/my_blog.git
-  branch: 
+  branch: gh-pages
