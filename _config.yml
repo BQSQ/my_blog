@@ -14,7 +14,7 @@ timezone:
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://bqsq.github.io/my_blog
 root: /
-permalink: :year/:month/:day/:title/
+permalink: :year-:month-:day/:title/
 permalink_defaults:
 
 # Directory
@@ -71,3 +71,8 @@ deploy:
   type: git
   repo: https://github.com/BQSQ/my_blog.git
   branch: gh-pages
+
+nofollow:
+    enable: true
+    exclude: # 不添加 nofollow 标签的连接
+ #   - exclude1.com 
