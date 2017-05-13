@@ -8,4 +8,5 @@ Disallow: /fonts/
 Disallow: /vendors/
 Disallow: /fancybox/
 
+Sitemap: http://fingersnow.cn/sitemap.xml
 Sitemap: http://fingersnow.cn/baidusitemap.xml
