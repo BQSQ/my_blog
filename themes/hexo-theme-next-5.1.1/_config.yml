@@ -4,7 +4,7 @@
 
 # Put your favicon.ico into `hexo-site/source/` directory.
 #favicon: /favicon.ico
-favicon: /uploads/logo.jpg
+favicon: /uploads/favicon.ico
 # Set default keywords (Use a comma to separate)
 keywords: "IT 技术 博客 总结"
 
