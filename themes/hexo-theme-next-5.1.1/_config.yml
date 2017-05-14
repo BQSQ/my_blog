@@ -294,14 +294,14 @@ baidu_analytics: 5f0088fdb078d0bcd5760c7653b53b2e
 # Disqus
 disqus:
   enable: false
-  shortname:
+  shortname: fingersnow
   count: true
 
 # Hypercomments
 #hypercomments_id:
 
 # Gentie productKey
-#gentie_productKey:
+gentie_productKey: d42d8547e5694ce08fe2d83c46c8a3db
 
 # changyan
 changyan:
@@ -323,6 +323,7 @@ changyan:
 # Warning: Baidu Share does not support https.
 #baidushare:
 ##  type: button
+baidushare: true
 
 # Share
 #jiathis:
