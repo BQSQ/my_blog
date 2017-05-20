@@ -1,9 +1,9 @@
 ---
 title: Oracle文件接口
 date: 2017-05-13 14:27:10
-tags: [oracle,文件接口]
-categories: oracle
-keywords: oracle,文件接口,编译java代码
+tags: 文件接口
+categories: 接口开发
+keywords: [oracle,文件接口,编译java代码]
 ---
 
 在不同的系统进行数据对接中，比较常用的实现方式就是webservices或者http，如果其中一方系统没有集成webservices，做项目过程中立即在原有框架加入该支持，花费的时间和成本相对来说比较高，现在介绍另一种对接形式，文件接口，同样也可以实现不同系统中的数据交互。
