@@ -39,11 +39,13 @@ docker images
 然后运行oracle镜像，映射22（openssh连接地址）端口和1521（容器中oracle封装默认的端口）端口。容器中的端口只有映射到你Windows10系统的端口上才能连接使用。
 ``` bash
 docker run -d -p 49160:22 -p 49161:1521 wnameless/oracle-xe-11g
-```  
+```
+
 如果你想远程连接oracle执行如下
 ``` bash
 docker run -d -p 49160:22 -p 49161:1521 -e ORACLE_ALLOW_REMOTE=true wnameless/oracle-xe-11g
 ```
+
 *说明：-e是执行参数，我一般都加上--restart=always容器启动的时候自动启动oracle，并且加上一个名称--name=oracle-master,-i打开STDIN，用于控制台交互,-t 分配 tty设备，该可以支持终端登录*   
 推荐执行如下命令：
 ``` bash
