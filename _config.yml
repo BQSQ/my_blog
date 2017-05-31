@@ -93,7 +93,12 @@ baidusitemap:
 #添加搜索
 algolia:
   applicationID: Y71NHCWK7X
-  apiKey: 1f2ca06a1c9787d9e1b2bbbdbcc4f544
+  apiKey: 14ca6b47037bfea58d365541e79f8579
   adminApiKey: adminApiKey
   indexName: prod_fingersnow
   chunkSize: 5000
+  fields:
+    - title
+    - slug
+    - path
+    - content:strip
