@@ -21,6 +21,10 @@ comments: false
 
 暂时先写这么多，好久没有写文章，早已经没了书生意气，挥斥方遒，日后再更新。
 
+<div id="music163">
+<iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=38592976&auto=1&height=66"></iframe>
+<div>
+
 ## 联系方式
 **Email:** dingyongbiao123@163.com
 
