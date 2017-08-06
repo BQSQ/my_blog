@@ -1,7 +1,7 @@
 ---
 title: 记录一个oracle事务的bug
 date: 2017-08-06 15:49:17
-tags: [oracle,事务,truncate,delete from 
+tags: [oracle,事务,truncate,delete from]
 categories: oracle
 keywords: [oracle,myBatis,事务失效,truncate table,delete from,存储过程,自动提交事务]
 ---
