@@ -23,8 +23,8 @@ public void updateProcess(Context ctx){
 }
 ```
 
-## 解决过程
-1. 由于已经知道存储过程抛异常出来也不会回滚表更新操作，所以怀疑是架构中@Tx事务控制问题，将事务改为手动控制。   
+## 解决过程(可以直接看跳到3)
+### 1. 由于已经知道存储过程抛异常出来也不会回滚表更新操作，所以怀疑是架构中@Tx事务控制问题，将事务改为手动控制。   
 ``` java
 TransactionTemplate t = ApplicationContextHelper.getBean("txTemplate");
 t.execute(new TransactionCallback<Object>() {
@@ -54,7 +54,7 @@ t.execute(new TransactionCallback<Object>() {
 ```
 *结果：这样使用后依然不行，事务无效。*
 
-2. 将更新操作合并到存储过程中。   
+### 2. 将更新操作合并到存储过程中。   
 我只执行一个语句，这下应该不会有事务的问题了。就算不配置事务也没关系，我只执行一个，要么都成功要么都失败！嘿嘿
 ``` java
 @Tx
@@ -64,7 +64,7 @@ public void updateProcess(Context ctx){
 }
 ```
 *结果：依然不行，存储过程中rollback后依然不能回滚update操作，这个可是在同一个存储过程中执行的，确定中间没有进行commit。*
-3. 手动测试存储过程，走一步查询一下表，确定是什么时候事务进行的提交。   
+### 3. 手动测试存储过程，走一步查询一下表，确定是什么时候事务进行的提交。   
 跟踪调试后发现在执行**TRUNCATE TABLE**语句进行删除表的时候事务进行了提交，后面的rollback其实根本无效，度娘一番：   
 *TRUNCATE是一个DDL语言，和其他所有的DDL语言一样，他将被隐式提交，不能对TRUNCATE使用ROLLBACK命令。在ORACLE中，当执行DDL语句时总是需要申请一个DDL锁，以保证DDL语句执行期间，所操作对象不会被其他SESSION修改。譬如，当执行语句ALTER TABLE T时,表T将会获得一个排它的DDL锁，语句执行结束，该锁被立即释放并隐式提交。*   
 解决方式：将存储过程中所有的**TRUNCATE TABLE**改成**delete from**。
