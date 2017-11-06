@@ -27,6 +27,10 @@ expdp 用户名/密码@实例名 directory=DATA_PUMP_DIR schemas=用户名 dumpf
 cd $DMPDIR
 zip -9 $ZIPNAME $DMPNAME
 rm -rf $DMPDIR/$DMPNAME
+
+#删除30天以前的文件
+find ./ -mtime +30 -name "bk-*" -exec rm -rf {} \;
+
 ```
 ## 创建定时任务
 推荐linux中使用oracle用户环境执行crontab任务。加入**. ~/.bash_profile;**是为了获取用户的环境变量，因为在测试中出现expdp命令不能使用的情况。
