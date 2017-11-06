@@ -12,6 +12,7 @@ sqlplus / as sysdb登录后：
 startup
 ```
 失败，ORA-03113: end-of-file on communication channel   
+<!--more -->
 查看日志：
 ```
 SQL> show parameter db_recovery_file_dest_size;
@@ -32,7 +33,7 @@ background_dump_dest		     string	 /home/oracle/app/11g/diag/rdbm
 ${ORACLEHOME}/app/11g/diag/rdbms/orcl/orcl/trace/alert_orcl.log
 ```
 
-增大闪回空间：
+### 增大闪回空间
 ```
 shutdown immediate
 startup nomount
@@ -69,7 +70,7 @@ delete archivelog all completed before 'sysdate - 30';
 ```
 
 
-启动失败日志：
+### 启动失败日志
 ```
 ARC3 started with pid=24, OS id=2958 
 ARC1: Archival started
