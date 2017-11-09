@@ -184,3 +184,7 @@ delete from t_cem_rbac_dataaccess d1
 --查看日志文件
 select member from v$logfile;
 ```
+### 查询字符集
+``` sql
+select * from v$nls_parameters t where t.PARAMETER='NLS_CHARACTERSET';
+```
