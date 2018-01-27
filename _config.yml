@@ -101,4 +101,5 @@ algolia:
     - title
     - slug
     - path
+    - tags
     - content:strip
