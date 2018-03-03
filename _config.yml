@@ -75,7 +75,7 @@ theme: hexo-theme-next-5.1.1
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/BQSQ/my_blog.git
+  repo: git@github.com:BQSQ/my_blog.git
   branch: gh-pages
 
 nofollow:
