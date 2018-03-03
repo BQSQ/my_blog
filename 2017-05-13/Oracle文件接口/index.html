@@ -1,0 +1,1088 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="oracle,文件接口,编译java代码">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="在不同的系统进行数据对接中，比较常用的实现方式就是webservices或者http，如果其中一方系统没有集成webservices，做项目过程中立即在原有框架加入该支持，花费的时间和成本相对来说比较高，现在介绍另一种对接形式，文件接口，同样也可以实现不同系统中的数据交互。">
+<meta name="keywords" content="oracle,文件接口,编译java代码">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle文件接口">
+<meta property="og:url" content="http://fingersnow.cn/2017-05-13/Oracle文件接口/index.html">
+<meta property="og:site_name" content="指尖残雪">
+<meta property="og:description" content="在不同的系统进行数据对接中，比较常用的实现方式就是webservices或者http，如果其中一方系统没有集成webservices，做项目过程中立即在原有框架加入该支持，花费的时间和成本相对来说比较高，现在介绍另一种对接形式，文件接口，同样也可以实现不同系统中的数据交互。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-27T07:05:11.927Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Oracle文件接口">
+<meta name="twitter:description" content="在不同的系统进行数据对接中，比较常用的实现方式就是webservices或者http，如果其中一方系统没有集成webservices，做项目过程中立即在原有框架加入该支持，花费的时间和成本相对来说比较高，现在介绍另一种对接形式，文件接口，同样也可以实现不同系统中的数据交互。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'Y71NHCWK7X',
+      apiKey: '14ca6b47037bfea58d365541e79f8579',
+      indexName: 'prod_fingersnow',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"请输入关键字","hits_empty":"没有找到与[ ${query} ]相关的内容","hits_stats":"${hits} 条相关记录，共耗时 ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fingersnow.cn/2017-05-13/Oracle文件接口/">
+
+
+
+
+
+  <title> Oracle文件接口 | 指尖残雪 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-99134818-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f0088fdb078d0bcd5760c7653b53b2e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">指尖残雪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">凄凄秋如夜，残雪舞指尖</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fingersnow.cn/2017-05-13/Oracle文件接口/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fingersnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="指尖残雪">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Oracle文件接口
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-13T14:27:10+08:00">
+                2017-05-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/接口开发/" itemprop="url" rel="index">
+                    <span itemprop="name">接口开发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-05-13/Oracle文件接口/" class="leancloud_visitors" data-flag-title="Oracle文件接口">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在不同的系统进行数据对接中，比较常用的实现方式就是webservices或者http，如果其中一方系统没有集成webservices，做项目过程中立即在原有框架加入该支持，花费的时间和成本相对来说比较高，现在介绍另一种对接形式，文件接口，同样也可以实现不同系统中的数据交互。<br><a id="more"></a></p>
+<ul>
+<li>优点：<br>实现方式简单，在oracle中实现，直接修改存储过程编译，不用重启web服务更新功能，系统不用系统集成webservices框架。   </li>
+<li>缺点：<br>不能实时接收数据和反馈。  </li>
+</ul>
+<hr>
+<h2 id="需求背景"><a href="#需求背景" class="headerlink" title="需求背景"></a>需求背景</h2><p>HR系统将人员信息同步到某系统（暂时叫它X系统），该公司系统之间并没有实现单点登录。需求中人员信息同步不需要实时，同步时间为T+1天。 </p>
+<h2 id="接口设计"><a href="#接口设计" class="headerlink" title="接口设计"></a>接口设计</h2><ol>
+<li>HR系统生成文件内容格式：<br>工号|姓名|身份证号码|性别编码|性别|出生日期|职级|年龄|移动电话|电子邮件（工作）|入司日期|办公电话|所在系列编码|所在系列名称|当前状态编码|当前状态名称|部门代码|部门名称|加入当前部门时间</li>
+<li>HR存放人员数据内容的FTP地址：/ftp/data/hr/emp   </li>
+<li>HR人员数据内容的文件名称格式：EMP_日期.txt（例如：HR_EMP_20170101.txt）</li>
+<li>ftp的用户名和密码，只开放X系统的读取权限。</li>
+</ol>
+<h2 id="接口实现"><a href="#接口实现" class="headerlink" title="接口实现"></a>接口实现</h2><p>HR系统已经将当天的员工信息按照格式要求生成相应的文件放到ftp中/ftp/data/hr/emp目录下，X系统要做的就是把文件下载下来，然后进行读取数据保存在数据库中。   </p>
+<h3 id="oracle安装jvm"><a href="#oracle安装jvm" class="headerlink" title="oracle安装jvm"></a>oracle安装jvm</h3><p>oracle安装jvm编译器,initjvm.sql,catjava.sql，@代表执行sql语句<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; @&#123;oracle_home&#125;/javavm/install/initjvm.sql </span><br><span class="line">SQL&gt; @&#123;oracle_home&#125;?/rdbms/admin/catjava.sql</span><br></pre></td></tr></table></figure></p>
+<p>赋角色给给用户<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">grant</span> javasyspriv <span class="keyword">to</span> 用户;</span><br><span class="line"><span class="keyword">grant</span> JAVA_DEPLOY <span class="keyword">to</span> 用户;</span><br></pre></td></tr></table></figure></p>
+<p>如果第一次安装不小心终止，先删除之前安装的jvm包，再重新安装<br><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; @&#123;oracle_home&#125;/javavm/install/rmjvm.sql</span><br></pre></td></tr></table></figure></p>
+<h3 id="下载ftp目录的文件（工具类）"><a href="#下载ftp目录的文件（工具类）" class="headerlink" title="下载ftp目录的文件（工具类）"></a>下载ftp目录的文件（工具类）</h3><p>oracle可以编译java写的程序，这里我们使用java上传或者下载远程ftp的文件(HR使用的sftp的协议，具体的代码网上很多)。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileNotFoundException;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.io.OutputStreamWriter;</span><br><span class="line"><span class="keyword">import</span> java.io.UnsupportedEncodingException;</span><br><span class="line"><span class="keyword">import</span> java.text.SimpleDateFormat;</span><br><span class="line"><span class="keyword">import</span> java.util.Calendar;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"><span class="keyword">import</span> com.jcraft.jsch.Channel;</span><br><span class="line"><span class="keyword">import</span> com.jcraft.jsch.ChannelSftp;</span><br><span class="line"><span class="keyword">import</span> com.jcraft.jsch.JSch;</span><br><span class="line"><span class="keyword">import</span> com.jcraft.jsch.JSchException;</span><br><span class="line"><span class="keyword">import</span> com.jcraft.jsch.Session;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * sftp工具类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SFtpUtil</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> Session session = <span class="keyword">null</span>;</span><br><span class="line">	<span class="comment">// 错误信息</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> String msg = <span class="string">""</span>;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 初始化连接</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> JSchException</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Session <span class="title">initSessionConnect</span><span class="params">(String ftpHost, <span class="keyword">int</span> ftpPort,</span></span></span><br><span class="line"><span class="function"><span class="params">			String ftpUserName, String ftpPassword)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			JSch jsch = <span class="keyword">new</span> JSch();</span><br><span class="line">			session = jsch.getSession(ftpUserName, ftpHost, ftpPort);</span><br><span class="line">			session.setPassword(ftpPassword);</span><br><span class="line">			session.setTimeout(<span class="number">10000</span>);</span><br><span class="line">			Properties config = <span class="keyword">new</span> Properties();</span><br><span class="line">			config.put(<span class="string">"StrictHostKeyChecking"</span>, <span class="string">"no"</span>);</span><br><span class="line">			session.setConfig(config);</span><br><span class="line">			session.connect();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (JSchException e) &#123;</span><br><span class="line">			msg = <span class="string">"ftp连接失败"</span> + e.getMessage();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> session;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 从ftp中使用sftp方式下载文件</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> ftpHost   ftp地址</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> ftpUserName  ftp用户名</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> ftpPassword  ftp密码</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> localBasePath 文件保存在本地的路径</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> ftpFileNamePath 人员数据文件</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> JSchException</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">downloadSftpFile</span><span class="params">(String ftpHost, String ftpUserName,</span></span></span><br><span class="line"><span class="function"><span class="params">			String ftpPassword, String localBasePath, String ftpFileNamePath)</span> </span>&#123;</span><br><span class="line">		Session session = initSessionConnect(ftpHost, <span class="number">10021</span>, ftpUserName,ftpPassword);</span><br><span class="line">		<span class="keyword">if</span> (<span class="string">""</span> == msg) &#123;</span><br><span class="line">			Channel channel = <span class="keyword">null</span>;</span><br><span class="line">			ChannelSftp chSftp = <span class="keyword">null</span>;</span><br><span class="line">			String localFilePath = <span class="keyword">null</span>;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				channel = session.openChannel(<span class="string">"sftp"</span>);</span><br><span class="line">				channel.connect();</span><br><span class="line">				chSftp = (ChannelSftp) channel;</span><br><span class="line">				File file = <span class="keyword">new</span> File(getStandardPath(localBasePath));</span><br><span class="line">				<span class="keyword">if</span> (!file.exists()) &#123;</span><br><span class="line">					file.mkdir();</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// 人员本地路径</span></span><br><span class="line">				localFilePath = getStandardPath(localBasePath) + getFileName(ftpFileNamePath);</span><br><span class="line">				chSftp.get(ftpFileNamePath, localFilePath);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				msg = <span class="string">"文件下载失败"</span> + e.getMessage();</span><br><span class="line">			&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> (<span class="keyword">null</span> != channel &amp;&amp; !channel.isClosed()) &#123;</span><br><span class="line">					channel.disconnect();</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (<span class="keyword">null</span> != session &amp;&amp; session.isConnected()) &#123;</span><br><span class="line">					session.disconnect();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">/**</span></span><br><span class="line"><span class="comment">			 * 由于在进行文件读取的时候，出现错误，经过很多分析和实验，</span></span><br><span class="line"><span class="comment">			 * 初步判断是oracle读取的时候最后一个字符不能是中文，要不然会找不到\n，现在默认使用@，在oracle中再去掉</span></span><br><span class="line"><span class="comment">			 */</span></span><br><span class="line">			<span class="keyword">if</span>(msg == <span class="string">""</span>)&#123;</span><br><span class="line">				replaceFile(localFilePath);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//删除30天以前的文件</span></span><br><span class="line">			removeFile(localBasePath);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> msg;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * sftp上传2个文件</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> ftpHost sftp主机地址</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> ftpUserName 用户名</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> ftpPassword 密码</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> sftpBasePath sftp基本路径</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> localFileNamePath1 本地文件全路径名称1</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> localFileNamePath2 本地文件全路径名称2</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> 成功返回""  失败返回失败信息</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">uploadSftpFile</span><span class="params">(String ftpHost, String ftpUserName,</span></span></span><br><span class="line"><span class="function"><span class="params">			String ftpPassword, String sftpBasePath, String localFileNamePath1,</span></span></span><br><span class="line"><span class="function"><span class="params">			String localFileNamePath2)</span></span>&#123;</span><br><span class="line">		Session session = initSessionConnect(ftpHost, <span class="number">10021</span>, ftpUserName,</span><br><span class="line">				ftpPassword);</span><br><span class="line">		<span class="keyword">if</span> (<span class="string">""</span> == msg) &#123;</span><br><span class="line">			Channel channel = <span class="keyword">null</span>;</span><br><span class="line">			ChannelSftp chSftp = <span class="keyword">null</span>;</span><br><span class="line">			String ftpFilePath1 = <span class="keyword">null</span>;</span><br><span class="line">			String ftpFilePath2 = <span class="keyword">null</span>;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				channel = session.openChannel(<span class="string">"sftp"</span>);</span><br><span class="line">				channel.connect();</span><br><span class="line">				chSftp = (ChannelSftp) channel;</span><br><span class="line">				ftpFilePath1 = getStandardPath(sftpBasePath)</span><br><span class="line">						+ getFileName(localFileNamePath1);</span><br><span class="line">				ftpFilePath2 = getStandardPath(sftpBasePath)</span><br><span class="line">						+ getFileName(localFileNamePath2);</span><br><span class="line">				</span><br><span class="line">				chSftp.put(localFileNamePath1, ftpFilePath1,ChannelSftp.OVERWRITE);</span><br><span class="line">				chSftp.put(localFileNamePath2, ftpFilePath2,ChannelSftp.OVERWRITE);</span><br><span class="line">			&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">				msg = <span class="string">"上传失败:"</span>+e.getMessage();</span><br><span class="line">			&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">				<span class="keyword">if</span> (<span class="keyword">null</span> != channel &amp;&amp; !channel.isClosed()) &#123;</span><br><span class="line">					channel.disconnect();</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (<span class="keyword">null</span> != session &amp;&amp; session.isConnected()) &#123;</span><br><span class="line">					session.disconnect();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> msg;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 获取文件名称</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> filePath</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">getFileName</span><span class="params">(String filePath)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">int</span> pos = filePath.lastIndexOf(<span class="string">"/"</span>);</span><br><span class="line">		<span class="keyword">return</span> filePath.substring(pos + <span class="number">1</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 获取标准路径</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> path</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">getStandardPath</span><span class="params">(String path)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (path.endsWith(<span class="string">"/"</span>)) &#123;</span><br><span class="line">			<span class="keyword">return</span> path;</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> path + <span class="string">"/"</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">replaceFile</span><span class="params">(String fileName)</span> </span>&#123;</span><br><span class="line">		StringBuffer sb = <span class="keyword">new</span> StringBuffer();</span><br><span class="line">		InputStreamReader isr = <span class="keyword">null</span>;</span><br><span class="line">		BufferedReader br = <span class="keyword">null</span>;</span><br><span class="line">		FileOutputStream fos = <span class="keyword">null</span>;</span><br><span class="line">		OutputStreamWriter osw = <span class="keyword">null</span>;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			FileInputStream fis = <span class="keyword">new</span> FileInputStream(fileName);</span><br><span class="line">			isr = <span class="keyword">new</span> InputStreamReader(fis, <span class="string">"UTF-8"</span>);</span><br><span class="line">			br = <span class="keyword">new</span> BufferedReader(isr);</span><br><span class="line">			String line = <span class="keyword">null</span>;</span><br><span class="line">			<span class="keyword">while</span> ((line = br.readLine()) != <span class="keyword">null</span>) &#123;</span><br><span class="line">				sb.append(line);</span><br><span class="line">				sb.append(<span class="string">"@\n"</span>); <span class="comment">// 补上换行符</span></span><br><span class="line">			&#125;</span><br><span class="line">			fos = <span class="keyword">new</span> FileOutputStream(fileName + <span class="string">"_tmp"</span>);</span><br><span class="line">			osw = <span class="keyword">new</span> OutputStreamWriter(fos, <span class="string">"UTF-8"</span>);</span><br><span class="line">			osw.write(sb.toString());</span><br><span class="line">			osw.flush();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (UnsupportedEncodingException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			msg = <span class="string">"文件下载失败"</span> + e.getMessage();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			msg = <span class="string">"文件下载失败"</span> + e.getMessage();</span><br><span class="line">		&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			msg = <span class="string">"文件下载失败"</span> + e.getMessage();</span><br><span class="line">		&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">			<span class="keyword">try</span> &#123;</span><br><span class="line">				<span class="keyword">if</span> (br != <span class="keyword">null</span>) &#123;br.close();&#125;</span><br><span class="line">				<span class="keyword">if</span> (isr != <span class="keyword">null</span>) &#123;isr.close();&#125;</span><br><span class="line">				<span class="keyword">if</span> (osw != <span class="keyword">null</span>) &#123;osw.close();&#125;</span><br><span class="line">				<span class="keyword">if</span> (fos != <span class="keyword">null</span>) &#123;fos.close();&#125;</span><br><span class="line">			&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				e.printStackTrace();</span><br><span class="line">				msg = <span class="string">"文件下载失败"</span> + e.getMessage();</span><br><span class="line">			&#125;</span><br><span class="line">			File delFile = <span class="keyword">new</span> File(fileName);</span><br><span class="line">			delFile.delete();</span><br><span class="line">			File old = <span class="keyword">new</span> File(fileName + <span class="string">"_tmp"</span>);</span><br><span class="line">			File n = <span class="keyword">new</span> File(fileName);</span><br><span class="line">			old.renameTo(n);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 删除30天以前的文件</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">removeFile</span><span class="params">(String localPath)</span> </span>&#123;</span><br><span class="line">		<span class="comment">// 计算一周前的日期</span></span><br><span class="line">		Calendar cdmonth = Calendar.getInstance();</span><br><span class="line">		cdmonth.add(Calendar.DATE, -<span class="number">30</span>);</span><br><span class="line">		Date d = cdmonth.getTime();</span><br><span class="line">		String url = getStandardPath(localPath);</span><br><span class="line">		File fileBag = <span class="keyword">new</span> File(url);</span><br><span class="line">		String[] filesName = fileBag.list();</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; filesName.length; i++) &#123;</span><br><span class="line">			<span class="comment">// 获得文件的创建时间</span></span><br><span class="line">			File file = <span class="keyword">new</span> File(url + filesName[i]);</span><br><span class="line">			Long time = file.lastModified();</span><br><span class="line">			Calendar cd = Calendar.getInstance();</span><br><span class="line">			cd.setTimeInMillis(time);</span><br><span class="line">			<span class="comment">// 文件的最后一次修改的时间</span></span><br><span class="line">			Date fileDate = cd.getTime();</span><br><span class="line">			<span class="keyword">boolean</span> flag = fileDate.before(d);</span><br><span class="line">			<span class="keyword">if</span> (flag) &#123;</span><br><span class="line">				file.delete();</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>说明：</strong> </p>
+<ul>
+<li><em>代码中的上传文件是2个，一个是数据文件一个是空的.ok文件，是为了让别人读取的时候判断是否数据文件上传成功，或者在.ok文件写入校验码(要有目录写入权限，下载的时候要有读取权限)。由于oracle在读取文件中一行末尾是汉字的时候会有问题，所以将每行末尾加上@符号来避免，暂时不知道是什么原因。本人认为是bug。</em></li>
+<li><em>引入两个jar包：jsch-0.1.54.jar，jzlib1.1.3.jar</em></li>
+</ul>
+<h3 id="在oracle中编译java代码"><a href="#在oracle中编译java代码" class="headerlink" title="在oracle中编译java代码"></a>在oracle中编译java代码</h3><p>由于我们代码中引入两个jar包：jsch-0.1.54.jar，jzlib1.1.3.jar，所以在oracle中也要加载这两个jar。在jar包目录执行命令。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">loadjava -r -f -o -user 用户名/密码@IP地址:端口号默认1521:实例名 jsch-0.1.54.jar</span><br><span class="line">loadjava -r -f -o -user 用户名/密码@IP地址:端口号默认1521:实例名 jzlib1.1.3.jar</span><br></pre></td></tr></table></figure></p>
+<p>给用户赋权限<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">grant</span> <span class="keyword">connect</span>  <span class="keyword">to</span> 用户名;</span><br><span class="line"><span class="keyword">grant</span> javaidpriv <span class="keyword">to</span> 用户名;</span><br><span class="line"><span class="keyword">grant</span> javasyspriv <span class="keyword">to</span> 用户名;</span><br><span class="line"><span class="keyword">grant</span> javauserpriv <span class="keyword">to</span> 用户名;</span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">resource</span> <span class="keyword">to</span> 用户名;</span><br></pre></td></tr></table></figure></p>
+<p>建立目录权限<br>先建立oracle directory<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">directory</span> HR_DATA_DIR <span class="keyword">as</span> <span class="string">'/home/oracle/file/hr_data'</span>; <span class="comment">--同步数据使用</span></span><br></pre></td></tr></table></figure></p>
+<p>给directory授权<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GRANT</span> <span class="keyword">READ</span>, WRITE <span class="keyword">ON</span> <span class="keyword">DIRECTORY</span> HR_DATA_DIR  <span class="keyword">TO</span> 用户名;</span><br></pre></td></tr></table></figure></p>
+<p>为数据库授权，授权文件路径一定要指定到文件所归属的上一层目录；<br>注意：(1) 该脚本中的IP及文件目录皆为测试使用，生成环境可能需要更多ip及目录的授权，*代表所有，可自己更改. (2) 以sys用户进行授权</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">begin</span>  </span><br><span class="line">	dbms_java.grant_permission(<span class="string">'用户名'</span>, <span class="string">'SYS:oracle.aurora.security.JServerPermission'</span>, <span class="string">'Verifier'</span>, <span class="string">''</span> );</span><br><span class="line">	dbms_java.grant_permission('用户名','java.net.SocketPermission','*','*');</span><br><span class="line">	dbms_java.grant_permission('用户名', 'SYS:java.net.SocketPermission', 'oracle服务器IP地址:*', 'listen,resolve');</span><br><span class="line">	dbms_java.grant_permission('用户名', 'SYS:java.net.SocketPermission', 'oracle服务器ip地址:*', 'connect,resolve');</span><br><span class="line">	dbms_java.grant_permission('用户名', 'SYS:java.io.FilePermission', '*', 'READ,WRITE');</span><br><span class="line">	Dbms_Java.Grant_Permission('用户名', 'SYS:java.lang.RuntimePermission', 'writeFileDescriptor', '');</span><br><span class="line">	Dbms_Java.Grant_Permission('用户名', 'SYS:java.lang.RuntimePermission', 'readFileDescriptor', '');</span><br><span class="line">	dbms_java.grant_permission('用户名', 'SYS:java.io.FilePermission', '&lt;&lt;ALL FILES&gt;&gt;', 'execute' );</span><br><span class="line">    <span class="comment">--将ftp文件保存在oracle服务器的位置/home/oracle/file/hr_data/需要进行授权,和目录权限HR_DATA_DIR赋权限不一样</span></span><br><span class="line">	dbms_java.grant_permission('用户名', 'SYS:java.io.FilePermission', '/home/oracle/file/hr_data<span class="comment">/*', 'read,write,execute,delete');</span></span><br><span class="line"><span class="comment">end;</span></span><br><span class="line"><span class="comment">/</span></span><br></pre></td></tr></table></figure>
+<p>将上面的ftp工具代码头部加上“create or replace and compile java source named ftpkit as”后直接在oracle中执行就可以了，ftpkit就是该工具的名称。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> <span class="keyword">replace</span> <span class="keyword">and</span> compile <span class="keyword">java</span> <span class="keyword">source</span> named ftpkit <span class="keyword">as</span></span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line">import java.io.File;</span><br><span class="line">...</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * sftp工具类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">public class SFtpUtil &#123;</span><br><span class="line">	private static Session session = null;</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建工具类body"><a href="#创建工具类body" class="headerlink" title="创建工具类body"></a>创建工具类body</h3><p>将java编译成功之后创建ftp工具类的body，方便供存储过程等调用SFTP_UTIL_PKG。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> <span class="keyword">replace</span> <span class="keyword">package</span> SFTP_UTIL_PKG <span class="keyword">is</span></span><br><span class="line">  <span class="comment">-- Purpose : 文件下载</span></span><br><span class="line">  <span class="comment">-- Created : 2016/11/17 15:50:37</span></span><br><span class="line">  <span class="comment">-- p_host : ftp地址</span></span><br><span class="line">  <span class="comment">-- p_hostname : ftp用户名</span></span><br><span class="line">  <span class="comment">-- p_password : ftp密码</span></span><br><span class="line">  <span class="comment">-- p_local_base_path : 文件保存在本地的路径</span></span><br><span class="line">  <span class="comment">-- p_ftp_path : 数据文件路径</span></span><br><span class="line">  <span class="keyword">function</span> sftp_download(p_host            varchar2,</span><br><span class="line">                         p_hostname        varchar2,</span><br><span class="line">                         p_password        varchar2,</span><br><span class="line">                         p_local_base_path varchar2,</span><br><span class="line">                         p_ftp_path       varchar2) <span class="keyword">return</span> varchar2 <span class="keyword">as</span></span><br><span class="line">    <span class="keyword">language</span> <span class="keyword">java</span> <span class="keyword">name</span> <span class="string">'SFtpUtil.downloadSftpFile(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)  return java.lang.String'</span>;</span><br><span class="line">  <span class="comment">-- Purpose : 文件上传</span></span><br><span class="line">  <span class="comment">-- Created : 2016/11/17 15:50:37</span></span><br><span class="line">  <span class="comment">-- p_host : ftp地址</span></span><br><span class="line">  <span class="comment">-- p_hostname : ftp用户名</span></span><br><span class="line">  <span class="comment">-- p_password : ftp密码</span></span><br><span class="line">  <span class="comment">-- p_sftp_base_path : 文件上传ftp的路径</span></span><br><span class="line">  <span class="comment">-- p_local_path1 : 本地数据文件路径</span></span><br><span class="line">  <span class="comment">-- p_local_path2 : 本地控制文件路径.ok</span></span><br><span class="line">  function sftp_upload(p_host           varchar2,</span><br><span class="line">                       p_hostname       varchar2,</span><br><span class="line">                       p_password       varchar2,</span><br><span class="line">                       p_sftp_base_path varchar2,</span><br><span class="line">                       p_local_path1    varchar2,</span><br><span class="line">                       p_local_path2    varchar2) return varchar2 as</span><br><span class="line">    language java name 'SFtpUtil.uploadSftpFile(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)  return java.lang.String';</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> SFTP_UTIL_PKG;</span><br><span class="line">/</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> <span class="keyword">replace</span> <span class="keyword">package</span> <span class="keyword">body</span> SFTP_UTIL_PKG <span class="keyword">is</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> SFTP_UTIL_PKG;</span><br><span class="line">/</span><br></pre></td></tr></table></figure></p>
+<h3 id="将文件下载读取后存到oracle数据库"><a href="#将文件下载读取后存到oracle数据库" class="headerlink" title="将文件下载读取后存到oracle数据库"></a>将文件下载读取后存到oracle数据库</h3><p>其中employee_hr表根据HR提供的字段信息和文件内容进行创建。这里不再给出。<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> <span class="keyword">replace</span> <span class="keyword">package</span> file_hr_oper_pkg <span class="keyword">is</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">-- Created : 2016/11/17 12:35:20</span></span><br><span class="line">  <span class="comment">-- Purpose : X系统接受hr同步的数据</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">--文件名字前缀</span></span><br><span class="line">  c_hr_emp_name <span class="keyword">constant</span> varchar2(<span class="number">30</span>) := <span class="string">'HR_EMP_'</span>;</span><br><span class="line">  <span class="comment">--文件名后缀</span></span><br><span class="line">  c_hr_suffix_name constant varchar2(8) := '.txt';</span><br><span class="line"></span><br><span class="line">  function download_file return boolean ;</span><br><span class="line"></span><br><span class="line">  procedure download_hr_data( p_result  out varchar2);</span><br><span class="line"></span><br><span class="line"><span class="keyword">end</span> file_hr_oper_pkg;</span><br><span class="line">/</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> <span class="keyword">replace</span> <span class="keyword">package</span> <span class="keyword">body</span> file_hr_oper_pkg <span class="keyword">is</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="comment">--下载文件函数</span></span><br><span class="line">  <span class="keyword">function</span> download_file <span class="keyword">return</span> <span class="built_in">boolean</span> <span class="keyword">is</span></span><br><span class="line">  </span><br><span class="line">    v_local_path    varchar2(<span class="number">200</span>);</span><br><span class="line">    v_ftp_host      varchar2(100);</span><br><span class="line">    v_ftp_user      varchar2(100);</span><br><span class="line">    v_ftp_pwd       varchar2(100);</span><br><span class="line">    v_remote_path   varchar2(200);</span><br><span class="line">    v_download_msg  varchar2(2000);</span><br><span class="line">    v_emp_file_name varchar2(200);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">begin</span></span><br><span class="line">    <span class="comment">--参数信息</span></span><br><span class="line">   </span><br><span class="line">    v_local_path:= 下载文件本地存放<span class="keyword">directory</span>;</span><br><span class="line">	v_ftp_host:= ftp主机地址;</span><br><span class="line">	v_ftp_user:= ftp用户名;</span><br><span class="line">	v_ftp_pwd:=ftp密码;</span><br><span class="line">	v_remote_path:= 远程ftp文件目录/ftp/data/hr/emp;</span><br><span class="line"></span><br><span class="line">    <span class="comment">--拼装ftp文件信息</span></span><br><span class="line">    if substr(v_remote_path, length(v_remote_path)) != '/' then</span><br><span class="line">      v_emp_file_name := v_remote_path || '/' ||</span><br><span class="line">                         to_char(sysdate - 1, 'YYYYMMDD') || '/' ||</span><br><span class="line">                         c_hr_emp_name || to_char(sysdate - 1, 'YYYYMMDD') ||</span><br><span class="line">                         c_hr_suffix_name;</span><br><span class="line">    else</span><br><span class="line">      v_emp_file_name := v_remote_path || to_char(sysdate - 1, 'YYYYMMDD') || '/' ||</span><br><span class="line">                         c_hr_emp_name || to_char(sysdate - 1, 'YYYYMMDD') ||</span><br><span class="line">                         c_hr_suffix_name;</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line">  </span><br><span class="line">    v_download_msg :=  SFTP_UTIL_PKG.sftp_download(p_host            =&gt; v_ftp_host,</span><br><span class="line">                                                      p_hostname        =&gt; v_ftp_user,</span><br><span class="line">                                                      p_password        =&gt; v_ftp_pwd,</span><br><span class="line">                                                      p_local_base_path =&gt; v_local_path,</span><br><span class="line">                                                      p_ftp_path       =&gt; v_emp_file_name);</span><br><span class="line">  </span><br><span class="line">    if v_download_msg is not null then</span><br><span class="line">      return false;</span><br><span class="line">    <span class="keyword">end</span> <span class="keyword">if</span>;</span><br><span class="line">    return true;</span><br><span class="line">  exception</span><br><span class="line">    when others then</span><br><span class="line">      return false;</span><br><span class="line">  <span class="keyword">end</span> download_file;</span><br><span class="line"></span><br><span class="line">  <span class="comment">--读取emp文件数据并保存到表中</span></span><br><span class="line">  function read_hr_emp_file(p_directory varchar2) return boolean is</span><br><span class="line">  </span><br><span class="line">    v_local_hr_emp_name varchar2(200);</span><br><span class="line">    v_fexists           boolean;</span><br><span class="line">    v_file_length       number;</span><br><span class="line">    v_block_size        binary_integer;</span><br><span class="line">    v_handler           utl_file.file_type;</span><br><span class="line">    v_line_buffer       varchar2(32767);</span><br><span class="line">    v_insert_str        varchar2(32767);</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">begin</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">--hr人员数据文件操作  </span></span><br><span class="line">    v_local_hr_emp_name := c_hr_emp_name ||</span><br><span class="line">                           to_char(<span class="keyword">sysdate</span> - <span class="number">1</span>, <span class="string">'YYYYMMDD'</span>) ||</span><br><span class="line">                           c_hr_suffix_name;</span><br><span class="line">    <span class="comment">--判断该文件是否存在</span></span><br><span class="line">    utl_file.fgetattr(location    =&gt; p_directory,</span><br><span class="line">                      filename    =&gt; v_local_hr_emp_name,</span><br><span class="line">                      fexists     =&gt; v_fexists,</span><br><span class="line">                      file_length =&gt; v_file_length,</span><br><span class="line">                      block_size  =&gt; v_block_size);</span><br><span class="line">  </span><br><span class="line">    if v_fexists then</span><br><span class="line">      v_handler := utl_file.fopen(location  =&gt; p_directory,</span><br><span class="line">                                  filename  =&gt; v_local_hr_emp_name,</span><br><span class="line">                                  open_mode =&gt; 'R');</span><br><span class="line">      <span class="comment">--删除表格数据</span></span><br><span class="line">      <span class="keyword">delete</span> <span class="keyword">from</span> employee_hr;</span><br><span class="line">      if utl_file.is_open(v_handler) then</span><br><span class="line">        loop</span><br><span class="line">          <span class="keyword">begin</span></span><br><span class="line">            utl_file.get_line(v_handler, v_line_buffer);</span><br><span class="line">            <span class="comment">--把一行中末尾@去掉</span></span><br><span class="line">            <span class="keyword">select</span> <span class="keyword">substr</span>(v_line_buffer, <span class="number">1</span>, <span class="keyword">length</span>(v_line_buffer) - <span class="number">1</span>)</span><br><span class="line">              <span class="keyword">into</span> v_line_buffer</span><br><span class="line">              <span class="keyword">from</span> dual;</span><br><span class="line">            <span class="keyword">select</span> <span class="keyword">REPLACE</span>(v_line_buffer,</span><br><span class="line">                           <span class="string">'|'</span>,</span><br><span class="line">                           <span class="keyword">chr</span>(<span class="number">39</span>) || <span class="keyword">chr</span>(<span class="number">44</span>) || <span class="keyword">chr</span>(<span class="number">39</span>))</span><br><span class="line">              <span class="keyword">into</span> v_insert_str</span><br><span class="line">              <span class="keyword">from</span> dual;</span><br><span class="line">            v_insert_str := chr(39) || v_insert_str || chr(39);</span><br><span class="line">            v_insert_str := '<span class="keyword">insert</span> <span class="keyword">into</span> employee_hr <span class="keyword">values</span>(<span class="string">' ||</span></span><br><span class="line"><span class="string">                            v_insert_str || '</span>)<span class="string">';</span></span><br><span class="line"><span class="string">            --动态sql插入数据</span></span><br><span class="line"><span class="string">            EXECUTE IMMEDIATE v_insert_str;</span></span><br><span class="line"><span class="string">          exception</span></span><br><span class="line"><span class="string">            WHEN no_data_found THEN</span></span><br><span class="line"><span class="string">              exit;</span></span><br><span class="line"><span class="string">          end;</span></span><br><span class="line"><span class="string">        end loop;</span></span><br><span class="line"><span class="string">        commit;</span></span><br><span class="line"><span class="string">        utl_file.fclose(v_handler);</span></span><br><span class="line"><span class="string">        return true;</span></span><br><span class="line"><span class="string">      end if;</span></span><br><span class="line"><span class="string">    else</span></span><br><span class="line"><span class="string">      return false;</span></span><br><span class="line"><span class="string">    end if;</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  exception</span></span><br><span class="line"><span class="string">    when others then</span></span><br><span class="line"><span class="string">      utl_file.fclose(v_handler);</span></span><br><span class="line"><span class="string">      rollback;</span></span><br><span class="line"><span class="string">      return false;</span></span><br><span class="line"><span class="string">  end read_hr_emp_file;</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  --下载主过程</span></span><br><span class="line"><span class="string">  procedure download_hr_data( p_result  out varchar2) is</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">    v_ora_directory varchar2(200); --文件下载路径</span></span><br><span class="line"><span class="string">    v_result        varchar(10) := '</span>N<span class="string">';</span></span><br><span class="line"><span class="string">  </span></span><br><span class="line"><span class="string">  begin</span></span><br><span class="line"><span class="string">    --获取传送文件路径地址 directory </span></span><br><span class="line"><span class="string">    v_ora_directory := '</span>HR_DATA_DIR<span class="string">' ; </span></span><br><span class="line"><span class="string">    --下载文件    </span></span><br><span class="line"><span class="string">    if download_file then</span></span><br><span class="line"><span class="string">      --下载文件成功   </span></span><br><span class="line"><span class="string">      --取出文件数据保存到数据库表</span></span><br><span class="line"><span class="string">      if read_hr_emp_file(p_directory =&gt; v_ora_directory) then</span></span><br><span class="line"><span class="string">        v_result := '</span>OK<span class="string">';</span></span><br><span class="line"><span class="string">      end if;</span></span><br><span class="line"><span class="string">    end if;</span></span><br><span class="line"><span class="string">    p_result := v_result;</span></span><br><span class="line"><span class="string">  commit;</span></span><br><span class="line"><span class="string">  exception</span></span><br><span class="line"><span class="string">    when others then</span></span><br><span class="line"><span class="string">      p_result := '</span>N<span class="string">';</span></span><br><span class="line"><span class="string">  end download_hr_data;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">end file_hr_oper_pkg;</span></span><br><span class="line"><span class="string">/</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>说明：</strong><br><em>file_hr_oper_pkg是主程序，download_file负责将文件下载到oracle服务器，read_hr_emp_file负责读取本地文件然后使用动态sql保存到oracle数据库中。</em></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/文件接口/" rel="tag"># 文件接口</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-05-10/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-05-20/保险行业资金系统接口/" rel="prev" title="保险行业资金系统接口">
+                保险行业资金系统接口 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpg" alt="fingersnow">
+          <p class="site-author-name" itemprop="name">fingersnow</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">45</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/6156893680/profile?topnav=1&wvr=6" target="_blank" title="Weibo" rel="external nofollow noopener noreferrer">
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/BQSQ/" target="_blank" title="GitHub" rel="external nofollow noopener noreferrer">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://git.oschina.net/zhijiancanxue" target="_blank" title="GitOSC" rel="external nofollow noopener noreferrer">
+                  
+                  GitOSC
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#需求背景"><span class="nav-number">1.</span> <span class="nav-text">需求背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口设计"><span class="nav-number">2.</span> <span class="nav-text">接口设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口实现"><span class="nav-number">3.</span> <span class="nav-text">接口实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#oracle安装jvm"><span class="nav-number">3.1.</span> <span class="nav-text">oracle安装jvm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载ftp目录的文件（工具类）"><span class="nav-number">3.2.</span> <span class="nav-text">下载ftp目录的文件（工具类）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在oracle中编译java代码"><span class="nav-number">3.3.</span> <span class="nav-text">在oracle中编译java代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建工具类body"><span class="nav-number">3.4.</span> <span class="nav-text">创建工具类body</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将文件下载读取后存到oracle数据库"><span class="nav-number">3.5.</span> <span class="nav-text">将文件下载读取后存到oracle数据库</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fingersnow</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow noopener noreferrer" target="_blank">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("fIxa6lF0dQeGoWMo027LWUcK-gzGzoHsz", "CVr1rtyglkAPXwJRKktz1mLn");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
