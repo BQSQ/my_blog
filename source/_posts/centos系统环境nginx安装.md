@@ -3,7 +3,7 @@ title: centos系统环境nginx安装
 date: 2018-03-03 17:57:56
 tags: [nginx,安装,centos]
 categories: [nginx]
-keywords: [nginx,nginx安装,centos]
+keywords: [nginx,nginx安装,centos,zlib.pcre]
 ---
 
 确认该系统已经安装过gcc编译器,centos安装nginx需要安装pcre、zlib库。   
