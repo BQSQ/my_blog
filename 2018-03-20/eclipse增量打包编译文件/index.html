@@ -1,0 +1,1051 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="eclipse,增量打包,发版">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="生产环境发版一般都是增量发版，这个时候需要打包修改的增量文件。使用patch将更新的文件记录导出。">
+<meta name="keywords" content="eclipse,增量打包,发版">
+<meta property="og:type" content="article">
+<meta property="og:title" content="eclipse增量打包编译文件">
+<meta property="og:url" content="http://fingersnow.cn/2018-03-20/eclipse增量打包编译文件/index.html">
+<meta property="og:site_name" content="指尖残雪">
+<meta property="og:description" content="生产环境发版一般都是增量发版，这个时候需要打包修改的增量文件。使用patch将更新的文件记录导出。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://opvqbxg2k.bkt.clouddn.com/eclipse/pkg/eclipse-pkg-01.png">
+<meta property="og:image" content="http://opvqbxg2k.bkt.clouddn.com/eclipse/pkg/eclipse-pkg-02.png">
+<meta property="og:image" content="http://opvqbxg2k.bkt.clouddn.com/eclipse/pkg/eclipse-pkg-03.png">
+<meta property="og:updated_time" content="2018-03-20T16:05:49.497Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="eclipse增量打包编译文件">
+<meta name="twitter:description" content="生产环境发版一般都是增量发版，这个时候需要打包修改的增量文件。使用patch将更新的文件记录导出。">
+<meta name="twitter:image" content="http://opvqbxg2k.bkt.clouddn.com/eclipse/pkg/eclipse-pkg-01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'Y71NHCWK7X',
+      apiKey: '14ca6b47037bfea58d365541e79f8579',
+      indexName: 'prod_fingersnow',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"请输入关键字","hits_empty":"没有找到与[ ${query} ]相关的内容","hits_stats":"${hits} 条相关记录，共耗时 ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fingersnow.cn/2018-03-20/eclipse增量打包编译文件/">
+
+
+
+
+
+  <title> eclipse增量打包编译文件 | 指尖残雪 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-99134818-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f0088fdb078d0bcd5760c7653b53b2e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">指尖残雪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">凄凄秋如夜，残雪舞指尖</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fingersnow.cn/2018-03-20/eclipse增量打包编译文件/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fingersnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="指尖残雪">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                eclipse增量打包编译文件
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-20T23:48:39+08:00">
+                2018-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/eclipse/" itemprop="url" rel="index">
+                    <span itemprop="name">eclipse</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/eclipse/发版/" itemprop="url" rel="index">
+                    <span itemprop="name">发版</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018-03-20/eclipse增量打包编译文件/" class="leancloud_visitors" data-flag-title="eclipse增量打包编译文件">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>生产环境发版一般都是增量发版，这个时候需要打包修改的增量文件。使用patch将更新的文件记录导出。</p>
+<a id="more"></a>
+<p>导出patch文件</p>
+<p><img src="http://opvqbxg2k.bkt.clouddn.com/eclipse/pkg/eclipse-pkg-01.png" alt="导出patch文件"><br><img src="http://opvqbxg2k.bkt.clouddn.com/eclipse/pkg/eclipse-pkg-02.png" alt="导出patch文件"><br><img src="http://opvqbxg2k.bkt.clouddn.com/eclipse/pkg/eclipse-pkg-03.png" alt="导出patch文件"></p>
+<p>java代码工具类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.io.BufferedInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.BufferedOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.BufferedReader;</span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.InputStreamReader;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 增量打包工具类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">IncrementalPackaging</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String PATCHFILE=<span class="string">"D:/patch.txt"</span>;<span class="comment">//补丁文件,由eclipse svn plugin生成  </span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String PROJECTPATH=<span class="string">"D:/kurrent_dev/CEM_V3.0.0_hq"</span>;<span class="comment">//项目文件夹路径  </span></span><br><span class="line">      </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String WEBCONTENT=<span class="string">"webapp"</span>;<span class="comment">//web应用文件夹名</span></span><br><span class="line">      </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String CLASSPATH=<span class="string">"D:/kurrent_dev/CEM_V3.0.0_hq/target/classes"</span>;<span class="comment">//class存放路径  </span></span><br><span class="line">      </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String DESPATH=<span class="string">"D:/update_pkg"</span>;<span class="comment">//补丁文件包存放路径  </span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> String VERSION=<span class="string">"20180320"</span>;<span class="comment">//补丁版本 </span></span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		copyFiles(getPatchFileList());</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 得到patch里面更改过的文件</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@throws</span> Exception</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> List&lt;String&gt; <span class="title">getPatchFileList</span><span class="params">()</span></span>&#123;  </span><br><span class="line">		FileInputStream f = <span class="keyword">null</span>;   </span><br><span class="line">		BufferedReader dr = <span class="keyword">null</span>;  </span><br><span class="line">		List&lt;String&gt; fileList = <span class="keyword">new</span> ArrayList&lt;String&gt;(); </span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			f = <span class="keyword">new</span> FileInputStream(PATCHFILE);  </span><br><span class="line">			dr =<span class="keyword">new</span> BufferedReader(<span class="keyword">new</span> InputStreamReader(f,<span class="string">"utf-8"</span>));</span><br><span class="line">        	String line;  </span><br><span class="line">        	<span class="keyword">while</span>((line=dr.readLine())!=<span class="keyword">null</span>)&#123;   </span><br><span class="line">        		<span class="keyword">if</span>(line.indexOf(<span class="string">"Index:"</span>) == <span class="number">0</span>)&#123;  </span><br><span class="line">        			line=line.replaceAll(<span class="string">" "</span>,<span class="string">""</span>);  </span><br><span class="line">        			line=line.substring(line.indexOf(<span class="string">":"</span>)+<span class="number">1</span>,line.length());  </span><br><span class="line">        			fileList.add(line);</span><br><span class="line">        			System.out.println(<span class="string">"文件集合:"</span>+line);</span><br><span class="line">        		&#125;</span><br><span class="line">        	&#125;</span><br><span class="line">        	System.out.println(<span class="string">"---------------------------------------------------------------------------------------------"</span>);</span><br><span class="line">		&#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">			e.printStackTrace();</span><br><span class="line">			System.err.println(<span class="string">"文件集合error"</span>);</span><br><span class="line">		&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="keyword">null</span> != dr) &#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					dr.close();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(<span class="keyword">null</span> != f)&#123;</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					f.close();</span><br><span class="line">				&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">					e.printStackTrace();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		</span><br><span class="line">		<span class="comment">//文件处理</span></span><br><span class="line">		handle$File(fileList);</span><br><span class="line">		</span><br><span class="line">		<span class="keyword">return</span> fileList;</span><br><span class="line">    &#125; </span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * copy 文件 ，有一部分文件含有匿名内部类，会生成ClassName$1.class类型的文件，需要用正则表达式获取文件</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@param</span> list</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">copyFiles</span><span class="params">(List&lt;String&gt; list)</span></span>&#123;  </span><br><span class="line">		<span class="keyword">if</span>(<span class="keyword">null</span> == list || list.size() &lt;=<span class="number">0</span> )&#123;</span><br><span class="line">			<span class="keyword">return</span> ;</span><br><span class="line">		&#125;</span><br><span class="line">		System.out.println(<span class="string">"开始copy文件-------------------------------------------------------------------------"</span>);</span><br><span class="line">        <span class="keyword">for</span>(String fullFileName:list)&#123;  </span><br><span class="line">            <span class="keyword">if</span>(fullFileName.indexOf(<span class="string">"src/main"</span>)!=-<span class="number">1</span>)&#123;<span class="comment">//对源文件目录下的文件处理 </span></span><br><span class="line">            	<span class="comment">//java文件处理</span></span><br><span class="line">            	<span class="keyword">if</span>(fullFileName.indexOf(<span class="string">"src/main/java"</span>)!= -<span class="number">1</span>)&#123;</span><br><span class="line">            		String fileName=fullFileName.replace(<span class="string">"src/main/java"</span>,<span class="string">""</span>);  </span><br><span class="line">            		<span class="keyword">if</span>(fileName.endsWith(<span class="string">".java"</span>))&#123;  </span><br><span class="line">                        fileName=fileName.replace(<span class="string">".java"</span>,<span class="string">".class"</span>);  </span><br><span class="line">                    &#125;</span><br><span class="line">            		</span><br><span class="line">            		fullFileName=CLASSPATH+fileName;</span><br><span class="line">            		</span><br><span class="line">            		String tempDesPath=fileName.substring(<span class="number">0</span>,fileName.lastIndexOf(<span class="string">"/"</span>));</span><br><span class="line">            		</span><br><span class="line">            		String desFilePathStr=DESPATH+<span class="string">"/"</span>+VERSION+<span class="string">"/WEB-INF/classes"</span>+tempDesPath;  </span><br><span class="line">            		File desFilePath=<span class="keyword">new</span> File(desFilePathStr);  </span><br><span class="line">            		<span class="keyword">if</span>(!desFilePath.exists())&#123;  </span><br><span class="line">            			desFilePath.mkdirs();  </span><br><span class="line">            		&#125;  </span><br><span class="line">            		String desFileNameStr=DESPATH+<span class="string">"/"</span>+VERSION+<span class="string">"/WEB-INF/classes"</span>+fileName;  </span><br><span class="line">            		</span><br><span class="line">            		copyFile(fullFileName, desFileNameStr);  </span><br><span class="line">            		System.out.println(<span class="string">"class文件:"</span> + fullFileName+<span class="string">" 复制完成"</span>); </span><br><span class="line">            		</span><br><span class="line">            	&#125;<span class="keyword">else</span> <span class="keyword">if</span> (fullFileName.indexOf(<span class="string">"src/main/resources"</span>)!= -<span class="number">1</span>)&#123;</span><br><span class="line">            		<span class="comment">//资源文件，直接从项目文件中拷贝</span></span><br><span class="line">            		String fileName=fullFileName.replace(<span class="string">"src/main/resources"</span>,<span class="string">""</span>); </span><br><span class="line">            		</span><br><span class="line">            		fullFileName=PROJECTPATH+<span class="string">"/"</span>+fullFileName;<span class="comment">//将要复制的文件全路径 </span></span><br><span class="line">            		</span><br><span class="line">            		String desFileNameStr=DESPATH+<span class="string">"/"</span>+VERSION+<span class="string">"/WEB-INF/classes"</span>+fileName; </span><br><span class="line">            		</span><br><span class="line">            		String tempDesPathStr=desFileNameStr.substring(<span class="number">0</span>,desFileNameStr.lastIndexOf(<span class="string">"/"</span>));</span><br><span class="line">            		</span><br><span class="line">            		File desFilePath=<span class="keyword">new</span> File(tempDesPathStr);  </span><br><span class="line">            		<span class="keyword">if</span>(!desFilePath.exists())&#123;  </span><br><span class="line">            			desFilePath.mkdirs();  </span><br><span class="line">            		&#125;</span><br><span class="line">            		copyFile(fullFileName, desFileNameStr);</span><br><span class="line">            		System.out.println(<span class="string">"资源文件:"</span>+fullFileName+<span class="string">"复制完成"</span>);  </span><br><span class="line">            	&#125;<span class="keyword">else</span> <span class="keyword">if</span>(fullFileName.indexOf(<span class="string">"src/main/webapp"</span>)!= -<span class="number">1</span>)&#123;</span><br><span class="line">            		<span class="comment">//普通文件处理</span></span><br><span class="line">            		String fileName=fullFileName.replace(<span class="string">"src/main/webapp"</span>,<span class="string">""</span>); </span><br><span class="line">            		</span><br><span class="line">            		fullFileName=PROJECTPATH+<span class="string">"/"</span>+fullFileName;<span class="comment">//将要复制的文件全路径 </span></span><br><span class="line">            		</span><br><span class="line">            		String desFileNameStr=DESPATH+<span class="string">"/"</span>+VERSION+fileName; </span><br><span class="line">            		</span><br><span class="line">            		String tempDesPathStr=desFileNameStr.substring(<span class="number">0</span>,desFileNameStr.lastIndexOf(<span class="string">"/"</span>));</span><br><span class="line">            		</span><br><span class="line">            		File desFilePath=<span class="keyword">new</span> File(tempDesPathStr);  </span><br><span class="line">            		<span class="keyword">if</span>(!desFilePath.exists())&#123;  </span><br><span class="line">            			desFilePath.mkdirs();  </span><br><span class="line">            		&#125;</span><br><span class="line">            		copyFile(fullFileName, desFileNameStr);</span><br><span class="line">            		System.out.println(<span class="string">"普通文件:"</span>+fullFileName+<span class="string">"复制完成"</span>);  </span><br><span class="line">            		</span><br><span class="line">            	&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            		System.err.println(<span class="string">"其他情况文件未考虑到:"</span>+fullFileName);</span><br><span class="line">            	&#125;</span><br><span class="line">                </span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            	System.err.println(<span class="string">"其他情况文件未考虑到:"</span>+fullFileName);</span><br><span class="line">            &#125;  </span><br><span class="line">              </span><br><span class="line">        &#125;  </span><br><span class="line">          </span><br><span class="line">    &#125; </span><br><span class="line">	</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 处理匿名内部类等的编译.class问题</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> handle$File(List&lt;String&gt; list)&#123;</span><br><span class="line">		List&lt;String&gt; list$ = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		<span class="keyword">for</span>(String fullName : list)&#123;</span><br><span class="line">			<span class="keyword">if</span>(fullName.endsWith(<span class="string">".java"</span>))&#123;</span><br><span class="line">				<span class="comment">//只有编译java有这种情况</span></span><br><span class="line">				String fileClassName = CLASSPATH + fullName.replace(<span class="string">"src/main/java"</span>, <span class="string">""</span>).replace(<span class="string">".java"</span>, <span class="string">""</span>);</span><br><span class="line">				String fileName$ = fileClassName.substring(fileClassName.lastIndexOf(<span class="string">"/"</span>)+<span class="number">1</span>)+<span class="string">"$"</span> ;</span><br><span class="line">				String fileClassPath = fileClassName.substring(<span class="number">0</span>, fileClassName.lastIndexOf(<span class="string">"/"</span>));</span><br><span class="line">				File file = <span class="keyword">new</span> File(fileClassPath);</span><br><span class="line">				<span class="comment">//必须是路径</span></span><br><span class="line">				<span class="keyword">if</span> (file.isFile() || !file.exists()) &#123;</span><br><span class="line">		            <span class="keyword">continue</span>;</span><br><span class="line">		        &#125;</span><br><span class="line">				<span class="comment">//列出所有文件</span></span><br><span class="line">				File[] files = file.listFiles();</span><br><span class="line">				<span class="comment">//进行className$匹配</span></span><br><span class="line">				<span class="keyword">for</span>(File f : files)&#123;</span><br><span class="line">					<span class="keyword">if</span>(f.isDirectory())&#123;</span><br><span class="line">						<span class="keyword">continue</span>;</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="keyword">if</span>(f.getName().startsWith(fileName$))&#123;</span><br><span class="line">						String fullFile$ = fullName.substring(<span class="number">0</span>, fullName.lastIndexOf(<span class="string">"/"</span>)+<span class="number">1</span>)+f.getName();</span><br><span class="line">						System.out.println(<span class="string">"带有$情况的文件:"</span>+fullFile$);</span><br><span class="line">						list$.add(fullFile$);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		list.addAll(list$);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line"> 	<span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">copyFile</span><span class="params">(String sourceFileNameStr, String desFileNameStr)</span> </span>&#123;  </span><br><span class="line">        File srcFile=<span class="keyword">new</span> File(sourceFileNameStr);  </span><br><span class="line">        File desFile=<span class="keyword">new</span> File(desFileNameStr);  </span><br><span class="line">        <span class="keyword">try</span> &#123;  </span><br><span class="line">            copyFile(srcFile, desFile);  </span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;  </span><br><span class="line">            e.printStackTrace();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">copyFile</span><span class="params">(File sourceFile, File targetFile)</span> <span class="keyword">throws</span> IOException </span>&#123;  </span><br><span class="line">        BufferedInputStream inBuff = <span class="keyword">null</span>;  </span><br><span class="line">        BufferedOutputStream outBuff = <span class="keyword">null</span>;  </span><br><span class="line">        <span class="keyword">try</span> &#123;  </span><br><span class="line">            <span class="comment">// 新建文件输入流并对它进行缓冲  </span></span><br><span class="line">            inBuff = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(sourceFile));  </span><br><span class="line">  </span><br><span class="line">            <span class="comment">// 新建文件输出流并对它进行缓冲  </span></span><br><span class="line">            outBuff = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(targetFile));  </span><br><span class="line">  </span><br><span class="line">            <span class="comment">// 缓冲数组  </span></span><br><span class="line">            <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span> * <span class="number">5</span>];  </span><br><span class="line">            <span class="keyword">int</span> len;  </span><br><span class="line">            <span class="keyword">while</span> ((len = inBuff.read(b)) != -<span class="number">1</span>) &#123;  </span><br><span class="line">                outBuff.write(b, <span class="number">0</span>, len);  </span><br><span class="line">            &#125;  </span><br><span class="line">            <span class="comment">// 刷新此缓冲的输出流  </span></span><br><span class="line">            outBuff.flush();  </span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;  </span><br><span class="line">            <span class="comment">// 关闭流  </span></span><br><span class="line">            <span class="keyword">if</span> (inBuff != <span class="keyword">null</span>)  </span><br><span class="line">                inBuff.close();  </span><br><span class="line">            <span class="keyword">if</span> (outBuff != <span class="keyword">null</span>)  </span><br><span class="line">                outBuff.close();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/eclipse/" rel="tag"># eclipse</a>
+          
+            <a href="/tags/增量打包/" rel="tag"># 增量打包</a>
+          
+            <a href="/tags/发版/" rel="tag"># 发版</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018-03-03/centos系统环境nginx安装/" rel="next" title="centos系统环境nginx安装">
+                <i class="fa fa-chevron-left"></i> centos系统环境nginx安装
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpg" alt="fingersnow">
+          <p class="site-author-name" itemprop="name">fingersnow</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">48</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/6156893680/profile?topnav=1&wvr=6" target="_blank" title="Weibo" rel="external nofollow noopener noreferrer">
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/BQSQ/" target="_blank" title="GitHub" rel="external nofollow noopener noreferrer">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://git.oschina.net/zhijiancanxue" target="_blank" title="GitOSC" rel="external nofollow noopener noreferrer">
+                  
+                  GitOSC
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fingersnow</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow noopener noreferrer" target="_blank">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("fIxa6lF0dQeGoWMo027LWUcK-gzGzoHsz", "CVr1rtyglkAPXwJRKktz1mLn");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
