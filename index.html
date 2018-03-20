@@ -441,7 +441,7 @@
 
       
         
-          <p>生产环境发版一般都是增量发版，这个时候需要打包修改的增量文件。使用patch将更新的文件记录导出。</p>
+          <p>生产环境发版一般都是增量发版，这个时候需要打包修改的增量文件。使用patch将更新的文件记录导出。需要注意的是对于java匿名内部类编译成class后会多出一个ClassName$1.class这样的文件，所以也要进行拷贝打包。</p>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018-03-20/eclipse增量打包编译文件/#more" rel="contents">
