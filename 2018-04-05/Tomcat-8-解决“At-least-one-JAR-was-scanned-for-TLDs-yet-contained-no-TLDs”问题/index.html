@@ -64,7 +64,7 @@
 <link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="IT 技术 博客 总结">
+  <meta name="keywords" content="tomcat,TLDs,scanned,no TLDs">
 
 
 
@@ -80,16 +80,18 @@
 
 
 
-<meta name="description" content="不积跬步无以至千里，不积小流无以至江海">
-<meta property="og:type" content="website">
-<meta property="og:title" content="指尖残雪">
-<meta property="og:url" content="http://fingersnow.cn/tags/iptables/index.html">
+<meta name="description" content="在使用tomcat8启动web应用程序的时候遇到如下信息一直在等待，虽然能够启动，但是很慢,tomcat8一直在扫描TLD文件。具体TLD是什么可以百度查询，这里只说明解决办法。 105-Apr-2018 13:53:59.619 INFO [localhost-startStop-1] org.apache.jasper.servlet.TldScanner.scanJars At least">
+<meta name="keywords" content="tomcat,TLDs,scanned,no TLDs">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat 8 解决“At least one JAR was scanned for TLDs yet contained no TLDs”问题">
+<meta property="og:url" content="http://fingersnow.cn/2018-04-05/Tomcat-8-解决“At-least-one-JAR-was-scanned-for-TLDs-yet-contained-no-TLDs”问题/index.html">
 <meta property="og:site_name" content="指尖残雪">
-<meta property="og:description" content="不积跬步无以至千里，不积小流无以至江海">
+<meta property="og:description" content="在使用tomcat8启动web应用程序的时候遇到如下信息一直在等待，虽然能够启动，但是很慢,tomcat8一直在扫描TLD文件。具体TLD是什么可以百度查询，这里只说明解决办法。 105-Apr-2018 13:53:59.619 INFO [localhost-startStop-1] org.apache.jasper.servlet.TldScanner.scanJars At least">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-05T08:22:15.974Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="指尖残雪">
-<meta name="twitter:description" content="不积跬步无以至千里，不积小流无以至江海">
+<meta name="twitter:title" content="Tomcat 8 解决“At least one JAR was scanned for TLDs yet contained no TLDs”问题">
+<meta name="twitter:description" content="在使用tomcat8启动web应用程序的时候遇到如下信息一直在等待，虽然能够启动，但是很慢,tomcat8一直在扫描TLD文件。具体TLD是什么可以百度查询，这里只说明解决办法。 105-Apr-2018 13:53:59.619 INFO [localhost-startStop-1] org.apache.jasper.servlet.TldScanner.scanJars At least">
 
 
 
@@ -117,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://fingersnow.cn/tags/iptables/">
+  <link rel="canonical" href="http://fingersnow.cn/2018-04-05/Tomcat-8-解决“At-least-one-JAR-was-scanned-for-TLDs-yet-contained-no-TLDs”问题/">
 
 
 
 
 
-  <title> 标签: iptables | 指尖残雪 </title>
+  <title> Tomcat 8 解决“At least one JAR was scanned for TLDs yet contained no TLDs”问题 | 指尖残雪 </title>
 </head>
 
 <body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -167,7 +169,7 @@
     
   
 
-  <div class="container sidebar-position-left  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
@@ -309,44 +311,206 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2>
-        iptables
-        <small>标签</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fingersnow.cn/2018-04-05/Tomcat-8-解决“At-least-one-JAR-was-scanned-for-TLDs-yet-contained-no-TLDs”问题/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fingersnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="指尖残雪">
+    </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                Tomcat 8 解决“At least one JAR was scanned for TLDs yet contained no TLDs”问题
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-05T14:54:50+08:00">
+                2018-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/tomcat/" itemprop="url" rel="index">
+                    <span itemprop="name">tomcat</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018-04-05/Tomcat-8-解决“At-least-one-JAR-was-scanned-for-TLDs-yet-contained-no-TLDs”问题/" class="leancloud_visitors" data-flag-title="Tomcat 8 解决“At least one JAR was scanned for TLDs yet contained no TLDs”问题">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>在使用tomcat8启动web应用程序的时候遇到如下信息一直在等待，虽然能够启动，但是很慢,tomcat8一直在扫描TLD文件。具体TLD是什么可以百度查询，这里只说明解决办法。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">05-Apr-2018 13:53:59.619 INFO [localhost-startStop-1] org.apache.jasper.servlet.TldScanner.scanJars At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h1 id="解决步骤"><a href="#解决步骤" class="headerlink" title="解决步骤"></a>解决步骤</h1><h2 id="修改TldScanner的打印日志级别"><a href="#修改TldScanner的打印日志级别" class="headerlink" title="修改TldScanner的打印日志级别"></a>修改TldScanner的打印日志级别</h2><p>编辑 {CATALINA-HOME}/conf/logging.properties 文件，在文件末尾添加：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">org.apache.jasper.servlet.TldScanner.level = FINE</span><br></pre></td></tr></table></figure>
+<p>修改后重启tomcat</p>
+<p>等待Tomcat重启完成，并且相关web components都加载完成，能够正常工作。此时，在 {CATALINA-HOME}/logs/catalina.xxxx-xx-xx.log 文件中能看到类似下面的log：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">05-Apr-2018 13:59:09.672 FINE [localhost-startStop-1] org.apache.jasper.servlet.TldScanner$TldScannerCallback.scan No TLD files were found in [file:/app/tomcat/webapps/invoice02/krmobile/WEB-INF/lib/druid-1.0.13.jar]. Consider adding the JAR to the tomcat.util.scan.StandardJarScanFilter.jarsToSkip property in CATALINA_BASE/conf/catalina.properties file.</span><br><span class="line">05-Apr-2018 13:59:09.684 FINE [localhost-startStop-1] org.apache.jasper.servlet.TldScanner$TldScannerCallback.scan No TLD files were found in [file:/app/tomcat/webapps/invoice02/krmobile/WEB-INF/lib/jxl.jar]. Consider adding the JAR to the tomcat.util.scan.StandardJarScanFilter.jarsToSkip property in CATALINA_BASE/conf/catalina.properties file.</span><br></pre></td></tr></table></figure>
+<h2 id="获取需要排除的jar包"><a href="#获取需要排除的jar包" class="headerlink" title="获取需要排除的jar包"></a>获取需要排除的jar包</h2><p>执行如下命令,其中/app/tomcat/server/tomcat8-invoice-02/logs/ 为tomcat的log日志目录，需要根据自己的位置进行替换,主要目的是将需要排出的jar包过滤输出到skips.txt文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd &#123;CATALINA-HOME&#125;/logs/</span><br><span class="line"></span><br><span class="line">egrep "No TLD files were found in \[file:[^\]+\]" /app/tomcat/server/tomcat8-invoice-02/logs/catalina.out -o | egrep "[^]/]+.jar" -o | sort | uniq | sed -e 's/.jar/.jar,\\/g' &gt; skips.txt</span><br></pre></td></tr></table></figure>
+<p>会在skips.txt 中得到类似下面的结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">activation-1.1.jar,\</span><br><span class="line">aopalliance-1.0.jar,\</span><br><span class="line">bs3-interface-client-1.0.0-SNAPSHOT.jar,\</span><br><span class="line">com.jkurrent.framework.core20150913.jar,\</span><br><span class="line">com.jkurrent.framework.http20160108.jar,\</span><br><span class="line">com.jkurrent.framework.id20150812.jar,\</span><br><span class="line">com.jkurrent.framework.sqlmap20150911.jar,\</span><br><span class="line">commons-configuration-1.3.jar,\</span><br><span class="line">commons-net-1.4.1.jar,\</span><br><span class="line">com.springsource.org.apache.commons.fileupload-1.2.0.jar,\</span><br><span class="line">druid-1.0.13.jar,\</span><br><span class="line">FastInfoset-1.2.7.jar,\</span><br><span class="line">fastjson-1.2.1.jar,\</span><br><span class="line">gson-2.2.4.jar,\</span><br><span class="line">guava-17.0.jar,\</span><br><span class="line">httpcore-4.4.1.jar,\</span><br><span class="line">httpmime-4.1.2.jar,\</span><br><span class="line">javax.ws.rs-api-2.0.1.jar,\</span><br><span class="line">jsoup-1.7.2.jar,\</span><br><span class="line">jstl-api-1.2.jar,\</span><br><span class="line">jxl.jar,\</span><br><span class="line">kurrent-validation-1.0-SNAPSHOT.jar,\</span><br><span class="line">logback-classic-0.9.29.jar,\</span><br><span class="line">logback-core-0.9.29.jar,\</span><br><span class="line">mybatis-3.2.2.jar,\</span><br><span class="line">ojdbc-10.2.0.2.0.jar,\</span><br><span class="line">pinyin4j-2.5.0.jar,\</span><br><span class="line">quartz-all-1.6.0-osgi.jar,\</span><br><span class="line">spring-aop-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-beans-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-context-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-context-support-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-core-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-expression-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-jdbc-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-orm-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-tx-4.0.6.RELEASE.jar,\</span><br><span class="line">spring-web-4.0.6.RELEASE.jar,\</span><br><span class="line">velocity-1.5.jar,\</span><br></pre></td></tr></table></figure>
+<h2 id="将需要排除的jar添加到tomcat"><a href="#将需要排除的jar添加到tomcat" class="headerlink" title="将需要排除的jar添加到tomcat"></a>将需要排除的jar添加到tomcat</h2><p>将上面的结果放到 {CATALINA-HOME}/conf/catalina.properties 文件中的 “tomcat.util.scan.StandardJarScanFilter.jarsToSkip=” 处，保存该文件</p>
+<p>注意：每行都以,\结尾，最后一行只有jar包名称,没有,\字符</p>
+<p>之后删除logging.properties文件配置org.apache.jasper.servlet.TldScanner.level = FINE</p>
+<p>总之，就是为了得到需要排除的jar包并添加到tomcat.util.scan.StandardJarScanFilter.jarsToSkip=处。</p>
 
-      <h2 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2018-01-30/CentOS7中firewall防火墙详解和配置以及切换为iptables防火墙/" itemprop="url">
-              
-                <span itemprop="name">CentOS7中firewall防火墙详解和配置以及切换为iptables防火墙</span>
-              
-            </a>
+
+      
+    </div>
+
+    <div>
+      
         
-      </h2>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-01-30T23:16:21+08:00" content="2018-01-30">
-          01-30
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/tomcat/" rel="tag"># tomcat</a>
+          
+            <a href="/tags/TLDs/" rel="tag"># TLDs</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018-03-31/如何成为解决问题的高手/" rel="next" title="如何成为解决问题的高手">
+                <i class="fa fa-chevron-left"></i> 如何成为解决问题的高手
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -354,6 +518,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -373,8 +541,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpg" alt="fingersnow">
           <p class="site-author-name" itemprop="name">fingersnow</p>
@@ -457,6 +634,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#解决步骤"><span class="nav-number">1.</span> <span class="nav-text">解决步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#修改TldScanner的打印日志级别"><span class="nav-number">1.1.</span> <span class="nav-text">修改TldScanner的打印日志级别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取需要排除的jar包"><span class="nav-number">1.2.</span> <span class="nav-text">获取需要排除的jar包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将需要排除的jar添加到tomcat"><span class="nav-number">1.3.</span> <span class="nav-text">将需要排除的jar添加到tomcat</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -564,6 +757,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
 
   
 
