@@ -1,0 +1,1096 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="SSL,安全,快速入门,OpenSSL">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="在查看、生成、转换、导入、导出等 SSL 证书的管理方面，OpenSSL 有着得天独厚的功能是支撑。 Apache 使用它加密 HTTPS 协议，OpenSSH 使用它加密 SSH。">
+<meta name="keywords" content="SSL,安全,快速入门,OpenSSL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OpenSSL 快速入门">
+<meta property="og:url" content="http://fingersnow.cn/2018-04-06/OpenSSL-快速入门/index.html">
+<meta property="og:site_name" content="指尖残雪">
+<meta property="og:description" content="在查看、生成、转换、导入、导出等 SSL 证书的管理方面，OpenSSL 有着得天独厚的功能是支撑。 Apache 使用它加密 HTTPS 协议，OpenSSH 使用它加密 SSH。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-06T03:51:24.675Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OpenSSL 快速入门">
+<meta name="twitter:description" content="在查看、生成、转换、导入、导出等 SSL 证书的管理方面，OpenSSL 有着得天独厚的功能是支撑。 Apache 使用它加密 HTTPS 协议，OpenSSH 使用它加密 SSH。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'Y71NHCWK7X',
+      apiKey: '14ca6b47037bfea58d365541e79f8579',
+      indexName: 'prod_fingersnow',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"请输入关键字","hits_empty":"没有找到与[ ${query} ]相关的内容","hits_stats":"${hits} 条相关记录，共耗时 ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fingersnow.cn/2018-04-06/OpenSSL-快速入门/">
+
+
+
+
+
+  <title> OpenSSL 快速入门 | 指尖残雪 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-99134818-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f0088fdb078d0bcd5760c7653b53b2e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">指尖残雪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">凄凄秋如夜，残雪舞指尖</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fingersnow.cn/2018-04-06/OpenSSL-快速入门/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fingersnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="指尖残雪">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                OpenSSL 快速入门
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-06T10:30:11+08:00">
+                2018-04-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/SSL/" itemprop="url" rel="index">
+                    <span itemprop="name">SSL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018-04-06/OpenSSL-快速入门/" class="leancloud_visitors" data-flag-title="OpenSSL 快速入门">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在查看、生成、转换、导入、导出等 SSL 证书的管理方面，OpenSSL 有着得天独厚的功能是支撑。 Apache 使用它加密 HTTPS 协议，OpenSSH 使用它加密 SSH。</p>
+<a id="more"></a>
+<h1 id="OpenSSL-简介"><a href="#OpenSSL-简介" class="headerlink" title="OpenSSL 简介"></a>OpenSSL 简介</h1><p>OpenSSL 是一个稳定的、商用等级的、功能全面的、免费开源的，专为 SSL/TLS 而生一款工具，其命令功能主要分为下面三大类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line">PS D:\temp&gt; openssl help</span><br><span class="line"></span><br><span class="line">Standard commands</span><br><span class="line">asn1parse         ca                ciphers           cms</span><br><span class="line">crl               crl2pkcs7         dgst              dhparam</span><br><span class="line">dsa               dsaparam          ec                ecparam</span><br><span class="line">enc               engine            errstr            exit</span><br><span class="line">gendsa            genpkey           genrsa            help</span><br><span class="line">list              nseq              ocsp              passwd</span><br><span class="line">pkcs12            pkcs7             pkcs8             pkey</span><br><span class="line">pkeyparam         pkeyutl           prime             rand</span><br><span class="line">rehash            req               rsa               rsautl</span><br><span class="line">s_client          s_server          s_time            sess_id</span><br><span class="line">smime             speed             spkac             srp</span><br><span class="line">ts                verify            version           x509</span><br><span class="line"></span><br><span class="line">Message Digest commands (see the `dgst&apos; command for more details)</span><br><span class="line">blake2b512        blake2s256        gost              md4</span><br><span class="line">md5               mdc2              rmd160            sha1</span><br><span class="line">sha224            sha256            sha384            sha512</span><br><span class="line"></span><br><span class="line">Cipher commands (see the `enc&apos; command for more details)</span><br><span class="line">aes-128-cbc       aes-128-ecb       aes-192-cbc       aes-192-ecb</span><br><span class="line">aes-256-cbc       aes-256-ecb       base64            bf</span><br><span class="line">bf-cbc            bf-cfb            bf-ecb            bf-ofb</span><br><span class="line">camellia-128-cbc  camellia-128-ecb  camellia-192-cbc  camellia-192-ecb</span><br><span class="line">camellia-256-cbc  camellia-256-ecb  cast              cast-cbc</span><br><span class="line">cast5-cbc         cast5-cfb         cast5-ecb         cast5-ofb</span><br><span class="line">des               des-cbc           des-cfb           des-ecb</span><br><span class="line">des-ede           des-ede-cbc       des-ede-cfb       des-ede-ofb</span><br><span class="line">des-ede3          des-ede3-cbc      des-ede3-cfb      des-ede3-ofb</span><br><span class="line">des-ofb           des3              desx              idea</span><br><span class="line">idea-cbc          idea-cfb          idea-ecb          idea-ofb</span><br><span class="line">rc2               rc2-40-cbc        rc2-64-cbc        rc2-cbc</span><br><span class="line">rc2-cfb           rc2-ecb           rc2-ofb           rc4</span><br><span class="line">rc4-40            seed              seed-cbc          seed-cfb</span><br><span class="line">seed-ecb          seed-ofb</span><br></pre></td></tr></table></figure>
+<h2 id="标准命令-Standard-commands"><a href="#标准命令-Standard-commands" class="headerlink" title="标准命令 Standard commands"></a>标准命令 Standard commands</h2><p>下面一些命令可能比较常用：</p>
+<ul>
+<li>ca：签名证书请求；</li>
+<li>genpkey：生成私钥；</li>
+<li>pkcs12：把私钥和公钥导出为 PKCS#12 格式；</li>
+<li>pkcs7：把 PKCS#7 格式的证书转换成为 pem 格式；</li>
+<li>genrsa：基于 RSA 算法生成的密钥对；</li>
+<li>s_client：类似于 telnet 或者 nc 的一个客户端测试工具，可以连接到 SSL 的服务器；</li>
+<li>req：生成 SSL 的证书请求。</li>
+</ul>
+<h2 id="信息摘要-Message-Digest-commands"><a href="#信息摘要-Message-Digest-commands" class="headerlink" title="信息摘要 Message Digest commands"></a>信息摘要 Message Digest commands</h2><p>其也提供了下面的生成信息摘要的命令函数和工具：</p>
+<ul>
+<li>blake2b512/blake2s256</li>
+<li>gost</li>
+<li>md4/md5</li>
+<li>mdc2</li>
+<li>rmd160</li>
+<li>sha1/sha224/sha256/sha384/sha512</li>
+</ul>
+<p>如果是一个自己的小型的、临时的应用，MD4/MD5 生成的安全摘要已完全够用，但是如果是需要暴露于公网，且牵涉到一些财产生命安全相关的领域，当然肯定是选用安全级别更高的 SHA-2 生成的信息摘要。</p>
+<h2 id="密码学相关的算法-Cipher-commands"><a href="#密码学相关的算法-Cipher-commands" class="headerlink" title="密码学相关的算法 Cipher commands"></a>密码学相关的算法 Cipher commands</h2><p>penSSL 不但有和管理生成 SSL 证书相关的命令，更令人惊艳的是其还是一个密码学方面的专家工具箱，其提供了非常多的密码学相关的工具函数.</p>
+<p>大家比较常见的就是 RC（是一种对称加密，加密的密钥流和明文一样长，同样的密钥和同样的长度能确定同一个密钥流），DES（一种将 64 比特的明文加密成 64 比特的密文的对称加密算法），AES（Advanced Encryption Standard，在密码学中又称 Rijndael 加密法，是美国联邦政府采用的一种区块加密标准），BASE64（一种把二进制加密成为 ASCII 字符），CBC（CBC 模式由 IBM 发明与 1976 年，在 CBC 模式中，每个明文块先与前一个密文块进行异或后，再进行加密）等算法。</p>
+<h1 id="OpenSSL-安装"><a href="#OpenSSL-安装" class="headerlink" title="OpenSSL 安装"></a>OpenSSL 安装</h1><p><a href="http://slproweb.com/products/Win32OpenSSL.html" rel="external nofollow noopener noreferrer" target="_blank">OpenSSL下载地址</a></p>
+<p>安装后添加到环境变量。</p>
+<h1 id="OpenSSL-实战操作"><a href="#OpenSSL-实战操作" class="headerlink" title="OpenSSL 实战操作"></a>OpenSSL 实战操作</h1><p>使用 OpenSSL xxx -help 可以查看具体一条命令的用法以及它的参数。</p>
+<h2 id="基本的命令"><a href="#基本的命令" class="headerlink" title="基本的命令"></a>基本的命令</h2><h3 id="创建一个私钥"><a href="#创建一个私钥" class="headerlink" title="创建一个私钥"></a>创建一个私钥</h3><p>通过 openssl help 命令，我们可以知道通过 genrsa 可以生成一个高强度的私钥，如果直接在 openSSL 的控制台输入 genrsa，则其会默认生成一个 2048 位的私钥。</p>
+<p>输出到文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">genrsa -aes128 -out D:/temp/openssldemo/fd.key 2048</span><br></pre></td></tr></table></figure>
+<p>使用 RSA 密码工具查看其私钥的具体信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rsa -text -in D:/temp/opensslDemo/fd.key</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line">OpenSSL&gt; rsa -text -in D:/temp/opensslDemo/fd.key</span><br><span class="line">Enter pass phrase for D:/temp/opensslDemo/fd.key:</span><br><span class="line">Private-Key: (2048 bit)</span><br><span class="line">modulus:</span><br><span class="line">    00:b9:04:e7:38:3a:74:99:f4:5e:5f:52:ba:07:fd:</span><br><span class="line">    09:af:65:1a:05:a1:31:12:85:90:8c:a1:24:d0:29:</span><br><span class="line">    24:30:87:d9:e6:5c:f5:47:13:3d:e6:c2:1f:c8:ab:</span><br><span class="line">    5f:08:6c:81:21:49:6a:be:ae:1b:f2:a0:f0:b4:b3:</span><br><span class="line">    33:63:97:37:bc:ed:97:24:4d:2a:cb:b5:22:97:9e:</span><br><span class="line">    36:49:5f:b3:66:22:77:0d:fa:67:22:54:95:60:56:</span><br><span class="line">    3f:9d:6a:f6:03:cb:3d:25:63:9d:14:ff:a9:91:4b:</span><br><span class="line">    9b:96:24:38:ff:74:c5:6d:f6:e4:f4:5c:dc:bc:c7:</span><br><span class="line">    7e:e7:ca:35:81:a4:c5:43:9e:06:d2:e9:20:1f:6e:</span><br><span class="line">    cf:f4:c0:54:82:4f:d3:e8:f2:79:0f:a5:e1:bd:36:</span><br><span class="line">    a8:0e:e0:bb:ec:fc:4e:b9:dd:68:fd:b5:f8:c0:e1:</span><br><span class="line">    ad:70:0a:48:75:7c:de:24:ec:a3:bb:56:f5:ab:11:</span><br><span class="line">    07:a9:0e:f1:e2:9f:09:01:4b:13:b2:c0:f5:fc:45:</span><br><span class="line">    96:87:7c:1e:ff:48:c9:49:ed:19:cb:e7:c5:9d:88:</span><br><span class="line">    45:95:48:fc:e6:45:b5:a5:dd:14:73:57:34:e5:57:</span><br><span class="line">    1e:f7:2c:a3:17:73:b0:ab:ef:48:d0:29:8f:42:c3:</span><br><span class="line">    ea:02:99:b9:fa:12:35:47:bf:b5:86:65:cd:14:aa:</span><br><span class="line">    d6:51</span><br><span class="line">publicExponent: 65537 (0x10001)</span><br><span class="line">privateExponent:</span><br><span class="line">    5c:6f:4c:ad:54:d7:08:4b:84:12:8f:9c:0d:7d:a7:</span><br><span class="line">    a7:0f:15:af:16:57:13:ef:d2:c5:cf:84:3a:d3:33:</span><br><span class="line">    17:63:e7:c3:25:52:0d:4e:59:b0:bd:ef:6f:2b:de:</span><br><span class="line">    f0:b0:74:db:12:78:d8:06:d8:43:a1:90:60:56:df:</span><br><span class="line">    27:b4:56:ce:76:cc:f9:ff:eb:8f:96:51:4f:fa:65:</span><br><span class="line">    18:c7:4d:33:8b:a8:7b:3d:4c:e5:63:e8:b5:16:a1:</span><br><span class="line">    f5:9d:88:87:60:b4:8d:c7:74:a5:17:0d:ba:5f:51:</span><br><span class="line">    bd:f3:1e:de:d1:92:09:5c:3e:0a:af:92:40:66:52:</span><br><span class="line">    ca:ae:c5:88:9d:af:48:16:03:17:b5:95:86:63:69:</span><br><span class="line">    52:a3:8e:59:0f:42:83:c7:60:bf:f1:22:04:23:3c:</span><br><span class="line">    a7:4a:de:aa:1e:9d:1e:65:70:71:a7:a8:b2:e3:4f:</span><br><span class="line">    a4:90:09:5b:c2:d3:b1:40:9c:34:d9:48:4e:64:a7:</span><br><span class="line">    f9:ef:fa:c0:91:2d:d8:d1:42:e7:ca:58:cd:7e:f0:</span><br><span class="line">    06:17:3c:0c:d5:6a:ab:7a:4e:2c:b8:32:4a:b3:a9:</span><br><span class="line">    b5:9b:34:f4:f2:a3:1e:4a:3e:f6:62:a3:f6:6b:16:</span><br><span class="line">    ef:9e:d2:ee:bd:81:57:54:89:1e:c1:7d:99:9f:16:</span><br><span class="line">    28:94:27:8a:1d:c6:09:fc:c0:98:0a:4b:a8:e1:53:</span><br><span class="line">    d9</span><br><span class="line">prime1:</span><br><span class="line">    00:ec:1a:15:7b:c9:5b:7c:43:94:58:c2:0c:77:01:</span><br><span class="line">    2d:fc:c3:0d:05:03:f3:d2:ad:44:7f:4c:da:21:6b:</span><br><span class="line">    05:84:e1:87:94:6c:2a:d2:a2:83:38:a0:09:15:18:</span><br><span class="line">    24:cd:c8:46:73:e1:25:1e:e9:71:56:a1:f1:35:ce:</span><br><span class="line">    1f:63:76:1e:a0:78:eb:ab:b1:ed:20:2e:2b:47:c6:</span><br><span class="line">    af:4d:5a:1d:c9:23:4a:ed:56:2c:c4:5b:96:fe:37:</span><br><span class="line">    15:7c:f2:8f:52:b1:b3:2c:65:d7:75:58:84:74:ec:</span><br><span class="line">    9f:c3:52:81:99:bb:4a:d4:f9:12:a1:8f:90:2b:e1:</span><br><span class="line">    58:fc:a9:96:5b:d8:31:7b:87</span><br><span class="line">prime2:</span><br><span class="line">    00:c8:9c:b4:93:8e:b8:f5:ea:05:c6:04:1d:ee:27:</span><br><span class="line">    31:95:67:0e:78:b2:66:ef:21:c8:39:a5:8c:b8:79:</span><br><span class="line">    17:5b:52:35:28:ff:91:8a:29:66:5d:59:9a:41:f5:</span><br><span class="line">    2e:6f:df:69:89:90:26:3f:dc:1f:7c:41:4a:16:1c:</span><br><span class="line">    c4:eb:ea:a7:2d:4f:7f:e7:82:d3:ac:7c:41:55:c8:</span><br><span class="line">    91:ee:3a:9a:08:b6:ed:c3:42:4f:09:bc:dd:b8:d9:</span><br><span class="line">    36:7b:85:d5:b4:50:33:a5:0c:2a:9b:fe:33:35:64:</span><br><span class="line">    59:4a:93:1b:18:34:4a:d0:14:30:a2:9e:09:e0:ae:</span><br><span class="line">    9b:ce:7b:9d:eb:c7:03:85:67</span><br><span class="line">exponent1:</span><br><span class="line">    00:93:7b:6f:b4:15:81:ca:4b:c4:9c:f5:0a:28:44:</span><br><span class="line">    5a:5f:ab:cf:b4:34:55:d8:62:57:89:55:8e:64:95:</span><br><span class="line">    9f:aa:f3:de:67:3e:72:39:85:3e:86:de:a1:0d:c6:</span><br><span class="line">    39:27:3a:55:98:09:29:d0:f7:6d:ce:f9:f5:dc:f0:</span><br><span class="line">    56:f7:20:4f:dd:59:eb:8d:22:e5:c6:d6:50:3e:d3:</span><br><span class="line">    c3:a9:84:03:5b:23:6a:a8:7a:ce:18:12:46:6d:a2:</span><br><span class="line">    27:10:17:cc:a3:91:51:25:08:b0:e0:22:5d:0b:54:</span><br><span class="line">    cc:2f:8c:98:5c:59:7c:53:31:0b:0c:54:cb:70:3d:</span><br><span class="line">    a2:02:a2:44:c4:36:76:22:7d</span><br><span class="line">exponent2:</span><br><span class="line">    00:bd:86:66:86:fd:10:3a:ab:73:f6:e6:4e:cc:7e:</span><br><span class="line">    d4:b6:3c:1d:8c:e3:a6:a1:86:bd:dd:d0:4c:48:bf:</span><br><span class="line">    85:d4:6d:ae:f1:63:b9:40:d8:e9:ef:89:46:55:c7:</span><br><span class="line">    e7:ae:23:58:56:71:0b:e1:ca:f9:27:ef:9a:a9:97:</span><br><span class="line">    56:67:37:51:e7:59:b3:11:aa:24:86:51:01:7c:a4:</span><br><span class="line">    b7:51:64:a5:bf:53:ea:fe:4c:77:d5:50:4b:fc:65:</span><br><span class="line">    a1:b6:42:f3:69:9d:57:9d:37:08:4e:45:72:65:9f:</span><br><span class="line">    bf:47:d8:00:81:f6:6d:33:75:cf:98:e2:4b:9c:ab:</span><br><span class="line">    f9:60:b2:a2:b8:6c:55:24:43</span><br><span class="line">coefficient:</span><br><span class="line">    2a:d3:19:34:ec:b3:26:7f:32:bc:19:ab:96:ec:63:</span><br><span class="line">    c7:1f:b6:ac:32:38:2e:f6:96:13:c5:0d:8a:73:b8:</span><br><span class="line">    b8:97:7c:c7:ab:40:a4:40:0c:02:c4:b9:1a:95:c2:</span><br><span class="line">    b0:b5:90:ad:19:a0:b7:c6:ca:f2:87:39:ed:30:f0:</span><br><span class="line">    ae:cc:a8:43:31:52:c2:cc:b3:4b:4b:c3:ff:bc:94:</span><br><span class="line">    55:ee:77:a6:e8:61:52:c3:35:02:4b:48:2c:0e:4a:</span><br><span class="line">    bc:2d:40:bd:5f:2f:af:48:48:09:fb:ec:28:c7:f6:</span><br><span class="line">    20:97:2b:a6:02:c3:55:6d:a7:2f:61:a3:78:9c:fc:</span><br><span class="line">    1d:07:fe:ce:0c:45:f2:f0</span><br><span class="line">writing RSA key</span><br><span class="line">-----BEGIN RSA PRIVATE KEY-----</span><br><span class="line">MIIEpAIBAAKCAQEAuQTnODp0mfReX1K6B/0Jr2UaBaExEoWQjKEk0CkkMIfZ5lz1</span><br><span class="line">RxM95sIfyKtfCGyBIUlqvq4b8qDwtLMzY5c3vO2XJE0qy7Uil542SV+zZiJ3Dfpn</span><br><span class="line">IlSVYFY/nWr2A8s9JWOdFP+pkUubliQ4/3TFbfbk9FzcvMd+58o1gaTFQ54G0ukg</span><br><span class="line">H27P9MBUgk/T6PJ5D6XhvTaoDuC77PxOud1o/bX4wOGtcApIdXzeJOyju1b1qxEH</span><br><span class="line">qQ7x4p8JAUsTssD1/EWWh3we/0jJSe0Zy+fFnYhFlUj85kW1pd0Uc1c05Vce9yyj</span><br><span class="line">F3Owq+9I0CmPQsPqApm5+hI1R7+1hmXNFKrWUQIDAQABAoIBAFxvTK1U1whLhBKP</span><br><span class="line">nA19p6cPFa8WVxPv0sXPhDrTMxdj58MlUg1OWbC9728r3vCwdNsSeNgG2EOhkGBW</span><br><span class="line">3ye0Vs52zPn/64+WUU/6ZRjHTTOLqHs9TOVj6LUWofWdiIdgtI3HdKUXDbpfUb3z</span><br><span class="line">Ht7RkglcPgqvkkBmUsquxYidr0gWAxe1lYZjaVKjjlkPQoPHYL/xIgQjPKdK3qoe</span><br><span class="line">nR5lcHGnqLLjT6SQCVvC07FAnDTZSE5kp/nv+sCRLdjRQufKWM1+8AYXPAzVaqt6</span><br><span class="line">Tiy4MkqzqbWbNPTyox5KPvZio/ZrFu+e0u69gVdUiR7BfZmfFiiUJ4odxgn8wJgK</span><br><span class="line">S6jhU9kCgYEA7BoVe8lbfEOUWMIMdwEt/MMNBQPz0q1Ef0zaIWsFhOGHlGwq0qKD</span><br><span class="line">OKAJFRgkzchGc+ElHulxVqHxNc4fY3YeoHjrq7HtIC4rR8avTVodySNK7VYsxFuW</span><br><span class="line">/jcVfPKPUrGzLGXXdViEdOyfw1KBmbtK1PkSoY+QK+FY/KmWW9gxe4cCgYEAyJy0</span><br><span class="line">k4649eoFxgQd7icxlWcOeLJm7yHIOaWMuHkXW1I1KP+RiilmXVmaQfUub99piZAm</span><br><span class="line">P9wffEFKFhzE6+qnLU9/54LTrHxBVciR7jqaCLbtw0JPCbzduNk2e4XVtFAzpQwq</span><br><span class="line">m/4zNWRZSpMbGDRK0BQwop4J4K6bznud68cDhWcCgYEAk3tvtBWBykvEnPUKKERa</span><br><span class="line">X6vPtDRV2GJXiVWOZJWfqvPeZz5yOYU+ht6hDcY5JzpVmAkp0Pdtzvn13PBW9yBP</span><br><span class="line">3VnrjSLlxtZQPtPDqYQDWyNqqHrOGBJGbaInEBfMo5FRJQiw4CJdC1TML4yYXFl8</span><br><span class="line">UzELDFTLcD2iAqJExDZ2In0CgYEAvYZmhv0QOqtz9uZOzH7UtjwdjOOmoYa93dBM</span><br><span class="line">SL+F1G2u8WO5QNjp74lGVcfnriNYVnEL4cr5J++aqZdWZzdR51mzEaokhlEBfKS3</span><br><span class="line">UWSlv1Pq/kx31VBL/GWhtkLzaZ1XnTcITkVyZZ+/R9gAgfZtM3XPmOJLnKv5YLKi</span><br><span class="line">uGxVJEMCgYAq0xk07LMmfzK8GauW7GPHH7asMjgu9pYTxQ2Kc7i4l3zHq0CkQAwC</span><br><span class="line">xLkalcKwtZCtGaC3xsryhzntMPCuzKhDMVLCzLNLS8P/vJRV7nem6GFSwzUCS0gs</span><br><span class="line">Dkq8LUC9Xy+vSEgJ++wox/YglyumAsNVbacvYaN4nPwdB/7ODEXy8A==</span><br><span class="line">-----END RSA PRIVATE KEY-----</span><br></pre></td></tr></table></figure>
+<h3 id="创建一个证书请求"><a href="#创建一个证书请求" class="headerlink" title="创建一个证书请求"></a>创建一个证书请求</h3><p>OpenSSL 就有一个 req 的命令，专门用来创建证书请求。需要注意的是，在创建一个 SSL 的证书请求前，先要创建一个私钥来，我们可以直接使用上面的私钥，通过 -key 的参数 D:/temp/opensslDemo/fd.key 来指定，然后通过 -out 的参数指定其输出的文件路径。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">req -new -key D:/temp/openSSLDemo/fd.key -out D:/temp/openSSLDemo/fd.csr</span><br></pre></td></tr></table></figure>
+<p>需要输入你的包含私钥fd.key 的密码,然后输入证书的基本信息，比如国家、地区、城市、组织、通用名、邮箱地址等，填写提示信息后就生成了csr签名文件。</p>
+<p>证书请求生成后，可以通过下面的命令查看生成的证书请求。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">req -text -in D:/temp/openSSLDemo/fd.csr -noout</span><br></pre></td></tr></table></figure>
+<p>其中，-text 表示已文本的方式查看，-in 后面需要知道待查看的证书的请求的路径，-noout 表示不输出其已经被编码的证书文本本身，下面为命令执行结果的输出。</p>
+<h3 id="自签名证书请求"><a href="#自签名证书请求" class="headerlink" title="自签名证书请求"></a>自签名证书请求</h3><p>如果你只是安装一个 SSL/TLS 服务器，比如在 IIS 或者 Tomcat 上面部署一个 Web 站点，而且这个站点只是供你自己开发测试使用，这个时候，就没有必要把证书请求发送给第三方的权威的商业 CA 去签名我们的证书请求，最快最方便的方式就是自己签署自己，从而生成一个自签名的 SSL 证书。OpenSSL 已经为我们考虑好了，其命令如下：(执行文件夹D:/temp/openSSLDemo/)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x509 -req -days 365 -in fd.csr -signkey fd.key -out fd.crt</span><br></pre></td></tr></table></figure>
+<p>证书生成后，我们需要测试或者查看证书，这个时候，就可以使用下面的类似命令了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x509 -text -in fd.crt -noout</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OpenSSL/" rel="tag"># OpenSSL</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018-04-05/SSL管理配置-自签名证书/" rel="next" title="SSL管理配置-自签名证书">
+                <i class="fa fa-chevron-left"></i> SSL管理配置-自签名证书
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpg" alt="fingersnow">
+          <p class="site-author-name" itemprop="name">fingersnow</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/6156893680/profile?topnav=1&wvr=6" target="_blank" title="Weibo" rel="external nofollow noopener noreferrer">
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/BQSQ/" target="_blank" title="GitHub" rel="external nofollow noopener noreferrer">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://git.oschina.net/zhijiancanxue" target="_blank" title="GitOSC" rel="external nofollow noopener noreferrer">
+                  
+                  GitOSC
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenSSL-简介"><span class="nav-number">1.</span> <span class="nav-text">OpenSSL 简介</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#标准命令-Standard-commands"><span class="nav-number">1.1.</span> <span class="nav-text">标准命令 Standard commands</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息摘要-Message-Digest-commands"><span class="nav-number">1.2.</span> <span class="nav-text">信息摘要 Message Digest commands</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#密码学相关的算法-Cipher-commands"><span class="nav-number">1.3.</span> <span class="nav-text">密码学相关的算法 Cipher commands</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenSSL-安装"><span class="nav-number">2.</span> <span class="nav-text">OpenSSL 安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#OpenSSL-实战操作"><span class="nav-number">3.</span> <span class="nav-text">OpenSSL 实战操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本的命令"><span class="nav-number">3.1.</span> <span class="nav-text">基本的命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个私钥"><span class="nav-number">3.1.1.</span> <span class="nav-text">创建一个私钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建一个证书请求"><span class="nav-number">3.1.2.</span> <span class="nav-text">创建一个证书请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自签名证书请求"><span class="nav-number">3.1.3.</span> <span class="nav-text">自签名证书请求</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fingersnow</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow noopener noreferrer" target="_blank">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("fIxa6lF0dQeGoWMo027LWUcK-gzGzoHsz", "CVr1rtyglkAPXwJRKktz1mLn");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1109 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="SSL,安全,配置管理,SSL配置管理">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/uploads/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="SSL(Secure Sockets Layer 安全套接层),及其继任者传输层安全（Transport Layer Security，TLS）是为网络通信提供安全及数据完整性的一种安全协议。TLS与SSL在传输层对网络连接进行加密。">
+<meta name="keywords" content="SSL,安全,配置管理,SSL配置管理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSL管理配置-自签名证书">
+<meta property="og:url" content="http://fingersnow.cn/2018-04-05/SSL管理配置-自签名证书/index.html">
+<meta property="og:site_name" content="指尖残雪">
+<meta property="og:description" content="SSL(Secure Sockets Layer 安全套接层),及其继任者传输层安全（Transport Layer Security，TLS）是为网络通信提供安全及数据完整性的一种安全协议。TLS与SSL在传输层对网络连接进行加密。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-06T02:29:45.298Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SSL管理配置-自签名证书">
+<meta name="twitter:description" content="SSL(Secure Sockets Layer 安全套接层),及其继任者传输层安全（Transport Layer Security，TLS）是为网络通信提供安全及数据完整性的一种安全协议。TLS与SSL在传输层对网络连接进行加密。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'Y71NHCWK7X',
+      apiKey: '14ca6b47037bfea58d365541e79f8579',
+      indexName: 'prod_fingersnow',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"请输入关键字","hits_empty":"没有找到与[ ${query} ]相关的内容","hits_stats":"${hits} 条相关记录，共耗时 ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://fingersnow.cn/2018-04-05/SSL管理配置-自签名证书/">
+
+
+
+
+
+  <title> SSL管理配置-自签名证书 | 指尖残雪 </title>
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-99134818-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f0088fdb078d0bcd5760c7653b53b2e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">指尖残雪</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">凄凄秋如夜，残雪舞指尖</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://fingersnow.cn/2018-04-05/SSL管理配置-自签名证书/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="fingersnow">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="指尖残雪">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+            
+            
+              
+                SSL管理配置-自签名证书
+              
+            
+          </h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-05T19:54:58+08:00">
+                2018-04-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/SSL/" itemprop="url" rel="index">
+                    <span itemprop="name">SSL</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018-04-05/SSL管理配置-自签名证书/" class="leancloud_visitors" data-flag-title="SSL管理配置-自签名证书">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SSL(Secure Sockets Layer 安全套接层),及其继任者传输层安全（Transport Layer Security，TLS）是为网络通信提供安全及数据完整性的一种安全协议。TLS与SSL在传输层对网络连接进行加密。</p>
+<a id="more"></a>
+<h1 id="商业-CA（Certificate-Authority）和私有-CA"><a href="#商业-CA（Certificate-Authority）和私有-CA" class="headerlink" title="商业 CA（Certificate Authority）和私有 CA"></a>商业 CA（Certificate Authority）和私有 CA</h1><p>电子商务认证授权机构（CA，Certificate Authority），也称为电子商务认证中心，是负责发放和管理数字证书的权威机构，并作为电子商务交易中受信任的第三方，承担公钥体系中公钥的合法性检验的责任。其就好比颁发身份证的公安局，当我们申请身份证的时候，我们必须要提供各种资料证明这个身份证是你的，比如你的户口本、家庭成员信息，那么 CA 也是类似，对于一些正规的商业的知名的 CA，当公司或者个人申请 SSL 证书的时候，CA 会验证申请人的信息是否可信任。</p>
+<p>CA 是证书的签发机构，它是 PKI 的核心，CA 是负责签发证书、认证证书、管理已颁发证书的机关。它要制定政策和具体步骤来验证、识别用户身份，并对用户证书进行签名，以确保证书持有者的身份和公钥的拥有权。</p>
+<p>CA 也拥有一个证书（内含公钥）和私钥。网上的公众用户通过验证 CA 的签字从而信任 CA，任何人都可以得到 CA 的证书（含公钥），用以验证它所签发的证书。</p>
+<p>如果用户想得到一份属于自己的证书，他应先向 CA 提出申请。在 CA 判明申请者的身份后，便为他分配一个公钥，并且 CA 将该公钥与申请者的身份信息绑在一起，并为之签名，此后，便形成证书发给申请者。如果一个用户想鉴别另一个证书的真伪，他就用 CA 的公钥对那个证书上的签字进行验证，一旦验证通过，该证书就被认为是有效的。</p>
+<p>下面的目前世界上最知名的8家 SSL 证书 CA 供应商。</p>
+<ul>
+<li>VeriSign</li>
+<li>GeoTrust</li>
+<li>Comodo</li>
+<li>Digicert</li>
+<li>Thawte</li>
+<li>GoDaddy</li>
+<li>Network Solutions</li>
+<li>GlobalSign</li>
+</ul>
+<p>签发 SSL 证书的 CA 供应商之间的区别主要有：机构品牌、证书加密方式、保险额度、服务与质量、浏览器支持率等。当然，CA 机构也符合「越大越好」这个说法。</p>
+<p>当然网上也有一些能申请免费 SSL 证书的 CA 供应商，比较知名的有：</p>
+<ul>
+<li>Let’s Encrypt</li>
+<li>StartSSL</li>
+<li>COMODO PositiveSSL：90天的试用期</li>
+<li>CloudFlare SSL</li>
+<li>腾讯云DV SSL 证书</li>
+<li>阿里云DV SSL证书</li>
+<li>百度云 : 有免费，不支持导出，只可用于百度云产品</li>
+</ul>
+<p>上面介绍的免费 SSL 证书，要说最让人放心的当属 Let’s Encrypt、腾讯云和阿里云的 DV SSL 证书，其他免费的 SSL 证书，建议大家谨慎使用，对于一些重要的网站还是建议直接购买 SSL 证书。</p>
+<p>为了区分不同的用户级别，服务端证书可以分成 DV、OV 和 EV 证书，他们之间具体有什么区别，请参考云栖社区的一篇博客<a href="https://yq.aliyun.com/articles/3164" rel="external nofollow noopener noreferrer" target="_blank">《CA 和证书那些事》</a>，分析的很专业。</p>
+<p>如果需要在实际公共互联网（Internet）部署的 SSL 服务器，强烈推荐到商业的知名的 CA 去申请 SSL 证书。</p>
+<p>但是在一个企业的内部的私有网络里，比如，局域网（Intranet）内，其可能会有很多企业自己的基于 Web 的网站系统（比如工作流审批、考勤、办公等）或者消息中间件服务器或者其他企业级应用系统，这些应用系统只暴露在局域网内，不会暴露在公有网络中，但是又需要有 SSL 保护各个系统之间的通信，比如存储企业所有应用系统或者个人信息的密码的 PMP 服务器（Password Management Professional），在访问和调用其 API 的时候，就一定要基于 HTTPS，因为密码可是机密信息啊。</p>
+<p>但是出于成本考虑或者保密性要求，我们没有必要向第三方商业 CA 申请 SSL 证书，不但花钱，而且还要提供一些杂七杂八的企业证明信息，这个时候，就可以考虑在企业内部搭建一个私有的 CA，搭建已给自己的局域网（Intranet）的一个私有 CA。</p>
+<h1 id="自签名证书"><a href="#自签名证书" class="headerlink" title="自签名证书"></a>自签名证书</h1><p>自签名证书，就是自己给自己颁发证书，换句话就是说，证书的使用者和颁发者是同一个 SSL 服务器，自签名证明一般用在开发或者测试环境，在正式的生产或者商用环境，建议大家生成证书请求，然后发送给第三方的 CA 或者自己搭建的企业内部的 CA 去签名部署。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass 123456 -validity 360 -keysize 2048</span><br></pre></td></tr></table></figure>
+<p>按照提示一步一步填写：密码暂时填写123456</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">PS D:\temp&gt; keytool -genkey -keyalg RSA -alias selfsigned -keystore keystore.jks -storepass 123456 -validity 360 -keys</span><br><span class="line">ize 2048</span><br><span class="line">您的名字与姓氏是什么?</span><br><span class="line">  [Unknown]:  dingyongbiao</span><br><span class="line">您的组织单位名称是什么?</span><br><span class="line">  [Unknown]:  default</span><br><span class="line">您的组织名称是什么?</span><br><span class="line">  [Unknown]:  default</span><br><span class="line">您所在的城市或区域名称是什么?</span><br><span class="line">  [Unknown]:  henan</span><br><span class="line">您所在的省/市/自治区名称是什么?</span><br><span class="line">  [Unknown]:  kaifeng</span><br><span class="line">该单位的双字母国家/地区代码是什么?</span><br><span class="line">  [Unknown]:  0000</span><br><span class="line">CN=dingyongbiao, OU=default, O=default, L=henan, ST=kaifeng, C=0000是否正确?</span><br><span class="line">  [否]:  y</span><br><span class="line"></span><br><span class="line">输入 &lt;selfsigned&gt; 的密钥口令</span><br><span class="line">        (如果和密钥库口令相同, 按回车):</span><br><span class="line">再次输入新口令:</span><br><span class="line">PS D:\temp&gt;</span><br></pre></td></tr></table></figure>
+<p>我们可以通过下面的命令查看 keystore.jks里面生成的自签名证书的详细细节。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -list  -keystore D:/temp/keystore.jks  -v</span><br></pre></td></tr></table></figure>
+<h1 id="证书签名请求（CSR）"><a href="#证书签名请求（CSR）" class="headerlink" title="证书签名请求（CSR）"></a>证书签名请求（CSR）</h1><p>证书签名请求（CSR，Certificate Signing Request）就是一段经过编码的字符文本，其会发送给 CA，CA 签名之后，其就变成了一个 SSL 证书，所以发送给 CA 之前，其是一个 CSR 的文件，CA 签名之后，其就变成了一张真正意义上的 SSL 证书，可以用于服务器的 SSL 配置了。</p>
+<p>在理解证书签名请求的时候，一定要记住，你生成证明签名请求的私钥一定不要发送给 CA，因为 CA 只需要你的 CSR 文件即可，不需要你提供生成证书签名申请的私钥.</p>
+<p>使用 OpenSSL，下面的一条命令就能生成。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl req -new -newkey rsa:2048 -nodes -out servername.csr -keyout servername.key</span><br></pre></td></tr></table></figure>
+<p>使用刚才生成的jks文件再执行下面命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -certreq -keyalg RSA -alias selfsigned -file keystore.csr -keystore keystore.jks</span><br></pre></td></tr></table></figure>
+<p>生成的证书请求文件，用文本编辑器打开，其就是类似于下面的样子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">-----BEGIN NEW CERTIFICATE REQUEST-----</span><br><span class="line">MIICzjCCAbYCAQAwWTENMAsGA1UEBhMEdGVzdDENMAsGA1UECBMEdGVzdDENMAsGA1UEBxMEdGVz</span><br><span class="line">dDENMAsGA1UEChMEdGVzdDENMAsGA1UECxMEdGVzdDEMMAoGA1UEAxMDZHliMIIBIjANBgkqhkiG</span><br><span class="line">9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkFNKJkXwviULYbDDowGf5jRjRVFpgvs35f8VeGQQB94BBo7W</span><br><span class="line">d6cM1DJpiHHMDePjS4qNWgn36rCScrJx4k+cY78TjhABd9/bYvaYbZ/v1mKHxbf0CxmO51JqmOAT</span><br><span class="line">TRORD26P/JANX8x8J541rPpplgAUc00dArc+Vsm9ME4/pXsI5YcrUFM7R+eiSAsMqwlVJ8Vjr2uf</span><br><span class="line">KhlL0A4i1qOJ6gtOU828nvsUnI9W72aYy+/xHNxhIdFBI5MhgQRhpzljgsKiIAVTwgJVzLoPEcU1</span><br><span class="line">B0FHM6jGydxH9tD0tCPYo/JhVKJOP8bocWoJJSrNmXpSyjMFIhNNYWZZ1zi8pkjbNQIDAQABoDAw</span><br><span class="line">LgYJKoZIhvcNAQkOMSEwHzAdBgNVHQ4EFgQUfxP1iiUGZlrkEnesnSpGGujfZPEwDQYJKoZIhvcN</span><br><span class="line">AQELBQADggEBAGTyJORYlnWz5qUg8w5aHrkNJHNqFk8eawMBwjBc+vdC08/4RVsTSzkBLu9iO0TN</span><br><span class="line">ga7b6oo9INiqq1oy03t6UtZSaZ/N7rt5CLKkfycLQpiASiV3ATFwBu3VQaVc8HyvuEql3xnu4E0T</span><br><span class="line">7eHfCDuDdCigodmA85ZLSyoN/SOyYyBOgOOMIWNqXCIY/dUQuprk/GEK7ihEgj3VtZrxjUI1duFt</span><br><span class="line">wJgJL2cK6RJg2aw5uJYQXW0qkixMed7wtRRxFuMyWwhPJ8pwW1zPsrUkPRCL7ZMCaoSXihVIc2hD</span><br><span class="line">xtcHXGa8uSNpzot8nOBYBRND54OQ4OCC2dfC6yVKdUUgsZy1jGo=</span><br><span class="line">-----END NEW CERTIFICATE REQUEST-----</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>需要注意的是 CSR 和私钥的长度决定了其是否能被破解的难易程度，截止 2018 年，私钥长度小于 2048 位的都可以被认为是有潜在安全风险的，因为根据现有的计算机的计算能力，小于 2048 的私钥在几个月内就能根据公钥成功碰撞私钥，如果一旦私钥被破解出来，初始化 SSL 连接其对称加密的秘钥就可能被破解者获取，从而无法保证 SSL 在通信图中的信息安全。建议在生成 CSR 的时候，使用的秘钥的长度强烈推荐为 2048 位。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/SSL/" rel="tag"># SSL</a>
+          
+            <a href="/tags/配置管理/" rel="tag"># 配置管理</a>
+          
+            <a href="/tags/安全/" rel="tag"># 安全</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018-04-05/Tomcat-8-解决“At-least-one-JAR-was-scanned-for-TLDs-yet-contained-no-TLDs”问题/" rel="next" title="Tomcat 8 解决“At least one JAR was scanned for TLDs yet contained no TLDs”问题">
+                <i class="fa fa-chevron-left"></i> Tomcat 8 解决“At least one JAR was scanned for TLDs yet contained no TLDs”问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018-04-06/OpenSSL-快速入门/" rel="prev" title="OpenSSL 快速入门">
+                OpenSSL 快速入门 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/avatar.jpg" alt="fingersnow">
+          <p class="site-author-name" itemprop="name">fingersnow</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">56</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/6156893680/profile?topnav=1&wvr=6" target="_blank" title="Weibo" rel="external nofollow noopener noreferrer">
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/BQSQ/" target="_blank" title="GitHub" rel="external nofollow noopener noreferrer">
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://git.oschina.net/zhijiancanxue" target="_blank" title="GitOSC" rel="external nofollow noopener noreferrer">
+                  
+                  GitOSC
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#商业-CA（Certificate-Authority）和私有-CA"><span class="nav-number">1.</span> <span class="nav-text">商业 CA（Certificate Authority）和私有 CA</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#自签名证书"><span class="nav-number">2.</span> <span class="nav-text">自签名证书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#证书签名请求（CSR）"><span class="nav-number">3.</span> <span class="nav-text">证书签名请求（CSR）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2017 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">fingersnow</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io" rel="external nofollow noopener noreferrer" target="_blank">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next" rel="external nofollow noopener noreferrer" target="_blank">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("fIxa6lF0dQeGoWMo027LWUcK-gzGzoHsz", "CVr1rtyglkAPXwJRKktz1mLn");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
