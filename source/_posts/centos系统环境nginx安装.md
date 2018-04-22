@@ -15,6 +15,7 @@ keywords: [nginx,nginx安装,centos,zlib.pcre]
 <!-- more -->
 
 1. 安装PCRE库
+
 ``` shell
 cd /usr/local/
 #将pcre文件拷贝到该文件夹下
@@ -24,7 +25,9 @@ cd pcre-8.21
 make
 make install
 ```
+
 2. 安装zlib库
+
 ``` shell
 cd /usr/local/  
 #将zlib文件拷贝到该文件夹下
@@ -34,23 +37,27 @@ cd zlib-1.2.8
 make
 make install 
 ```
+
 3. 安装nginx
+
 ``` shell
 cd /usr/local/
 #将nginx文件拷贝到该文件夹下
 tar -zxvf nginx-1.12.2.tar.gz 
 cd nginx-1.12.2
 ./configure --prefix=/usr/local/nginx --with-http_stub_status_module --with-http_gzip_static_module --with-http_stub_status_module --with-pcre=/usr/local/pcre-8.39 --with-zlib=/usr/local/zlib-1.2.8 --with-http_ssl_module
-``` 
+```
 
 4. nginx测试
-```
+
+``` shell
 cd /usr/local/nginx/sbin
 ./nginx
 ```
+
 页面访问:http://localhost:8080
 
-```
+``` shell
 #启动
 cd /usr/local/nginx/sbin/
 ./nginx
