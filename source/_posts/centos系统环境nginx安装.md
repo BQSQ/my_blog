@@ -31,11 +31,11 @@ make install
 ``` shell
 cd /usr/local/  
 #将zlib文件拷贝到该文件夹下
-tar -zxvf zlib-1.2.8.tar.gz 
-cd zlib-1.2.8  
+tar -zxvf zlib-1.2.8.tar.gz
+cd zlib-1.2.8
 ./configure
 make
-make install 
+make install
 ```
 
 3. 安装nginx
